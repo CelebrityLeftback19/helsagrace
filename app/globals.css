@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   Design tokens — the single source of truth for the portfolio.
+   Tailwind v4 turns these into utilities (bg-ink, text-accent…).
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  --color-base: #f9f9fb;
+  --color-surface: #ffffff;
+  --color-ink: #0f0f14;
+  --color-ink-mid: #3a3a45;
+  --color-muted: #6b6b7a;
+  --color-border: #e4e4e9;
+  --color-accent: #5b4fe8;
+  --color-accent-light: #eeecff;
+  --color-accent-dark: #3d33c4;
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+}
+
+/* Layout primitives that are not part of the color scale. */
+:root {
+  --px: clamp(20px, 5vw, 60px);
+  --max: 1200px;
+  --nav-h: 64px;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* ── Scroll reveal (progressive enhancement) ───────────────────
+   Gated behind `.js` so content stays visible without JavaScript. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js [data-reveal][data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Project drawer ──────────────────────────────────────────── */
+.drawer-panel {
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+
+.drawer-panel[data-open="true"] {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-panel {
+    transition: none;
+  }
+}
+
+/* ── Accessibility helper ────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
