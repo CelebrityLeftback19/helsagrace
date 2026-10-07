@@ -69,7 +69,9 @@ export default function RootLayout({
         {/* Marks that JS is available so scroll-reveal can safely hide content first. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: "document.documentElement.classList.add('js')",
+            __html:
+              "document.documentElement.classList.add('js');" +
+              "try{if(sessionStorage.getItem('hg-intro')==='1')document.documentElement.classList.add('intro-seen')}catch(e){}",
           }}
         />
       </head>

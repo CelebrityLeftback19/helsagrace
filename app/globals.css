@@ -268,3 +268,20 @@ html.has-custom-cursor select {
     animation: none;
   }
 }
+
+/* ── Landing intro ───────────────────────────────────────────────
+   Hidden by default so no-JS visitors never see a curtain they can't
+   dismiss; shown by the pre-paint `js` class and skipped once seen. */
+.intro-overlay {
+  display: none;
+}
+
+html.js:not(.intro-seen) .intro-overlay {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    display: none !important;
+  }
+}

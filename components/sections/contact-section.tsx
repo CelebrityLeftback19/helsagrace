@@ -1,18 +1,11 @@
 import { Mail, Phone } from "lucide-react";
 
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon } from "@/components/brand-icons";
 import { ContactForm } from "@/components/contact-form";
 import { Reveal } from "@/components/reveal";
 import type { SiteSettings } from "@/lib/content";
 
 type IconProps = { className?: string; "aria-hidden"?: boolean };
-
-function LinkedInIcon({ className, "aria-hidden": ariaHidden }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden={ariaHidden}>
-      <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.02h4.56V23H.22V8.02zM8.34 8.02h4.37v2.05h.06c.61-1.15 2.1-2.37 4.32-2.37 4.62 0 5.47 3.04 5.47 7v8.3h-4.55v-7.36c0-1.76-.03-4.02-2.45-4.02-2.45 0-2.83 1.91-2.83 3.89V23H8.34V8.02z" />
-    </svg>
-  );
-}
 
 type ContactLink = {
   href: string;
@@ -24,13 +17,16 @@ type ContactLink = {
 function buildContactLinks(site: SiteSettings): ContactLink[] {
   return [
     { href: `mailto:${site.email}`, label: site.email, icon: Mail },
-    { href: site.phoneHref, label: site.phone, icon: Phone },
+    { href: site.whatsapp, label: "WhatsApp", icon: WhatsAppIcon, external: true },
+    { href: site.github, label: "GitHub", icon: GitHubIcon, external: true },
     { href: site.linkedin, label: "LinkedIn", icon: LinkedInIcon, external: true },
+    { href: site.phoneHref, label: site.phone, icon: Phone },
   ];
 }
 
 export function ContactSection({ site }: { site: SiteSettings }) {
   const contactLinks = buildContactLinks(site);
+
   return (
     <section
       id="contact"
@@ -62,6 +58,7 @@ export function ContactSection({ site }: { site: SiteSettings }) {
                     {...(link.external
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
+                    data-cursor="link"
                     className="inline-flex items-center gap-3 text-[15px] font-medium text-ink-mid transition-colors hover:text-accent"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-base text-muted">

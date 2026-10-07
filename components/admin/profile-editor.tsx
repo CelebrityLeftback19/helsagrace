@@ -101,6 +101,13 @@ export function ProfileEditor({ initial }: { initial: SiteSettings }) {
             hint="Used for the tel: link, e.g. tel:+2348012345678"
           />
           <TextField label="LinkedIn URL" value={site.linkedin} onChange={(v) => set("linkedin", v)} />
+          <TextField label="GitHub URL" value={site.github} onChange={(v) => set("github", v)} />
+          <TextField
+            label="WhatsApp link"
+            value={site.whatsapp}
+            onChange={(v) => set("whatsapp", v)}
+            hint="Digits only after wa.me, e.g. https://wa.me/2348012345678"
+          />
         </div>
       </AdminCard>
 

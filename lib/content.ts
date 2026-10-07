@@ -29,6 +29,8 @@ export type SiteSettings = {
   phone: string;
   phoneHref: string;
   linkedin: string;
+  github: string;
+  whatsapp: string;
 };
 
 export type Discipline = { label: string; sub: string; icon: IconKey };
@@ -108,6 +110,9 @@ export const site: SiteSettings = {
   phone: "+234 — your number here",
   phoneHref: "tel:+2340000000000",
   linkedin: "https://linkedin.com/in/helsagrace",
+  github: "https://github.com/CelebrityLeftback19",
+  // WhatsApp deep link — digits only, no + or spaces, e.g. https://wa.me/2348012345678
+  whatsapp: "https://wa.me/2340000000000",
 };
 
 /* ── Disciplines (hero) ──────────────────────────────────────── */

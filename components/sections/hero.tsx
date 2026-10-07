@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { useIntro } from "@/components/intro/intro-provider";
 import { Magnetic } from "@/components/motion/magnetic";
 import { MaskedWords } from "@/components/motion/masked-words";
 import { prefersReducedMotion } from "@/components/motion/smooth-scroll";
@@ -12,9 +13,10 @@ import type { Discipline, SiteSettings } from "@/lib/content";
 
 export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: Discipline[] }) {
   const rootRef = useRef<HTMLElement>(null);
+  const { ready } = useIntro();
 
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (!ready || prefersReducedMotion()) return;
     const root = rootRef.current;
     if (!root) return;
 
@@ -29,7 +31,7 @@ export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: D
     }, root);
 
     return () => context.revert();
-  }, []);
+  }, [ready]);
 
   return (
     <section

@@ -1,3 +1,4 @@
+import { IntroProvider } from "@/components/intro/intro-provider";
 import { ProjectDrawerProvider } from "@/components/project-drawer";
 import { AboutSection } from "@/components/sections/about-section";
 import { CapabilitiesSection } from "@/components/sections/capabilities-section";
@@ -21,7 +22,14 @@ export default async function HomePage() {
   const content = await getContent();
 
   return (
-    <>
+    <IntroProvider
+      name={content.site.name}
+      nameEm={content.site.nameEm}
+      tagline={`${content.site.heroLine1} ${content.site.heroLine2}`}
+      images={content.projects.flatMap((project) =>
+        project.screens.map((screen) => ({ src: screen.src, alt: screen.alt })),
+      )}
+    >
       <SiteHeader site={content.site} />
       <main>
         <ProjectDrawerProvider projects={content.projects}>
@@ -35,6 +43,6 @@ export default async function HomePage() {
         </ProjectDrawerProvider>
       </main>
       <SiteFooter site={content.site} />
-    </>
+    </IntroProvider>
   );
 }
