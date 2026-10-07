@@ -15,7 +15,113 @@ Primary statement: *"I design products. I also build them."*
 - **Supabase** — content storage, auth and Row-Level Security for the admin
 - **Lucide React** for icons
 - **Instrument Serif** + **Inter** self-hosted through `next/font`
-- Deployed to **Vercel**
+- Deployed to **Vercel** / **Orizon**
+
+## Architecture
+
+[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/celebrityleftback19/helsagrace?utm_source=readme&utm_medium=badge)
+
+[![Architecture diagram of celebrityleftback19/helsagrace](https://gitdiagram.com/celebrityleftback19/helsagrace/diagram.png)](https://gitdiagram.com/celebrityleftback19/helsagrace?utm_source=readme&utm_medium=picture)
+
+```mermaid
+flowchart TD
+
+subgraph group_public["Public portfolio"]
+  node_home["Portfolio page<br/>[page.tsx]"]
+  node_hero["Hero<br/>[hero.tsx]"]
+  node_work["Project work<br/>[work-section.tsx]"]
+  node_capabilities["Capabilities"]
+  node_process["Process"]
+  node_stack["Technology stack<br/>[stack-section.tsx]"]
+  node_about["About and stats<br/>[about-section.tsx]"]
+  node_contactsection["Contact section"]
+  node_caseimage["Case images<br/>[case-image.tsx]"]
+  node_drawer["Case study drawer<br/>[project-drawer.tsx]"]
+  node_tag["Project tags<br/>[tag.tsx]"]
+  node_icons["Icon resolver<br/>[icons.ts]"]
+end
+
+subgraph group_content["Content services"]
+  node_contentmodel["Content model and defaults<br/>[content.ts]"]
+  node_cms["Content reader<br/>[cms.ts]"]
+  node_supabase[("Supabase content store")]
+  node_settings["Supabase configuration<br/>[env.ts]"]
+end
+
+subgraph group_admin["Content administration"]
+  node_adminpages["Admin pages"]
+  node_editors["Content editors"]
+  node_controls["Editor controls<br/>[controls.tsx]"]
+  node_adminactions["Admin actions<br/>[actions.ts]"]
+  node_adminauth["Session and owner checks<br/>[server.ts]"]
+  node_admindata["History, messages, media<br/>[admin-data.ts]"]
+  node_adminui["Admin UI primitives<br/>[ui.tsx]"]
+end
+
+subgraph group_contact["Contact enquiries"]
+  node_contactform["Contact form<br/>[contact-form.tsx]"]
+  node_contactroute["Contact API route<br/>[route.ts]"]
+  node_contactservice["Contact validation<br/>[contact.ts]"]
+  node_resend["Resend email"]
+end
+
+subgraph group_motion["Motion and interaction"]
+  node_intro["Intro experience<br/>[intro-provider.tsx]"]
+  node_scroll["Smooth scrolling<br/>[smooth-scroll.tsx]"]
+  node_reveal["Scroll reveal<br/>[reveal.tsx]"]
+end
+
+node_visitor(("Visitor"))
+node_adminuser(("Portfolio owner"))
+
+node_visitor -->|"visits"| node_home
+node_home -->|"loads content"| node_cms
+node_home -->|"wraps page"| node_intro
+node_home -->|"renders"| node_hero
+node_home -->|"renders"| node_work
+node_home -->|"renders"| node_capabilities
+node_home -->|"renders"| node_process
+node_home -->|"renders"| node_stack
+node_home -->|"renders"| node_about
+node_home -->|"renders"| node_contactsection
+node_cms -->|"merges defaults"| node_contentmodel
+node_cms -->|"checks configuration"| node_settings
+node_cms -->|"reads content"| node_supabase
+node_work -->|"opens case study"| node_drawer
+node_capabilities -->|"opens proof project"| node_drawer
+node_drawer -->|"renders screenshots"| node_caseimage
+node_drawer -->|"renders tags"| node_tag
+node_hero -->|"uses scrolling"| node_scroll
+node_intro -->|"uses scrolling"| node_scroll
+node_capabilities -->|"resolves icons"| node_icons
+node_adminuser -->|"manages content"| node_adminpages
+node_adminpages -->|"uses editors"| node_editors
+node_editors -->|"uses controls"| node_controls
+node_editors -->|"uses primitives"| node_adminui
+node_editors -->|"saves content"| node_adminactions
+node_adminactions -->|"checks owner"| node_adminauth
+node_adminactions -->|"reads content"| node_cms
+node_adminactions -->|"writes content"| node_supabase
+node_adminactions -->|"restores and lists"| node_admindata
+node_adminauth -->|"checks session"| node_supabase
+node_admindata -->|"reads admin data"| node_supabase
+node_contactform -->|"posts enquiry"| node_contactroute
+node_contactroute -->|"validates input"| node_contactservice
+node_contactroute -->|"sends email"| node_resend
+
+classDef toneNeutral fill:#f8fafc,stroke:#334155,stroke-width:1.5px,color:#0f172a
+classDef toneBlue fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554
+classDef toneAmber fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#78350f
+classDef toneMint fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px,color:#14532d
+classDef toneRose fill:#ffe4e6,stroke:#e11d48,stroke-width:1.5px,color:#881337
+classDef toneIndigo fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#312e81
+classDef toneTeal fill:#ccfbf1,stroke:#0f766e,stroke-width:1.5px,color:#134e4a
+class node_home,node_hero,node_work,node_capabilities,node_process,node_stack,node_about,node_contactsection,node_caseimage,node_drawer,node_tag,node_icons toneBlue
+class node_contentmodel,node_cms,node_supabase,node_settings toneAmber
+class node_adminpages,node_editors,node_controls,node_adminactions,node_adminauth,node_admindata,node_adminui toneMint
+class node_contactform,node_contactroute,node_contactservice,node_resend toneRose
+class node_intro,node_scroll,node_reveal,node_visitor,node_adminuser toneIndigo
+```
 
 ## Getting started
 
@@ -129,9 +235,15 @@ Set these in `.env.local` (and in Vercel):
 - `RESEND_API_KEY` — from your Resend account. **Required**; without it the form reports
   "not configured" and sends nothing.
 - `CONTACT_TO_EMAIL` — where enquiries land. Falls back to the profile email.
-- `CONTACT_FROM_EMAIL` — a verified sender, e.g. `HelsaGrace <hello@yourdomain.com>`.
-  Defaults to Resend's test sender `onboarding@resend.dev`, which only delivers to the
-  Resend account owner — fine for testing, so verify your domain before launch.
+- `CONTACT_FROM_EMAIL` — the sender. It must be **an address on a domain you've verified in
+  Resend** (add the DKIM / SPF / DMARC records Resend shows, then hit Verify). Until a domain
+  is verified you can only send from Resend's test sender `onboarding@resend.dev`, which
+  delivers **only to your own Resend account email** — so it's fine for testing, but you must
+  verify a domain (e.g. `helsagrace.site`) before launch. `gmail.com` etc. cannot be used as a
+  sender because you don't control the domain.
+
+Submissions are also **stored in Supabase** (`contact_messages`) and shown under
+`/admin/messages`, so nothing is lost even if the email fails.
 
 ## Before launch
 
