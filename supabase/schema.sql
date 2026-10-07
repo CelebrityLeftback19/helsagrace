@@ -127,7 +127,52 @@ create policy "media admin delete"
   using (bucket_id = 'media' and public.is_admin());
 
 -- ─────────────────────────────────────────────────────────────
--- 5. Add yourself as an owner
+-- 5. Contact messages
+-- ─────────────────────────────────────────────────────────────
+
+-- Every submission is stored here; emailing via Resend is best-effort on top.
+create table if not exists public.contact_messages (
+  id bigint generated always as identity primary key,
+  name text not null,
+  email text not null,
+  subject text,
+  message text not null,
+  status text not null default 'new',
+  emailed boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+alter table public.contact_messages enable row level security;
+
+-- The public form may insert (validated + rate-limited in the API route).
+drop policy if exists "contact insert" on public.contact_messages;
+create policy "contact insert"
+  on public.contact_messages for insert
+  to anon, authenticated
+  with check (true);
+
+-- Only owners may read, update or delete submissions.
+drop policy if exists "contact admin read" on public.contact_messages;
+create policy "contact admin read"
+  on public.contact_messages for select
+  to authenticated
+  using (public.is_admin());
+
+drop policy if exists "contact admin update" on public.contact_messages;
+create policy "contact admin update"
+  on public.contact_messages for update
+  to authenticated
+  using (public.is_admin())
+  with check (public.is_admin());
+
+drop policy if exists "contact admin delete" on public.contact_messages;
+create policy "contact admin delete"
+  on public.contact_messages for delete
+  to authenticated
+  using (public.is_admin());
+
+-- ─────────────────────────────────────────────────────────────
+-- 6. Add yourself as an owner
 -- ─────────────────────────────────────────────────────────────
 -- After creating your auth user (Authentication → Users), run:
 --

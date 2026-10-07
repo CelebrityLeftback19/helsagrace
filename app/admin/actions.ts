@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getRevisionData, listMedia, type MediaItem } from "@/lib/admin-data";
 import {
+  CONTACT_MESSAGES_TABLE,
   CONTENT_TABLE,
   MEDIA_BUCKET,
   REVISIONS_TABLE,
@@ -177,5 +178,39 @@ export async function deleteMedia(name: string): Promise<ActionResult> {
   if (error) return { ok: false, error: error.message };
 
   revalidatePath("/admin/media");
+  return { ok: true };
+}
+
+/* ── Contact messages ────────────────────────────────────────── */
+
+export async function setMessageStatus(id: number, status: "new" | "read"): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+  if (!(await getCurrentUser())) return { ok: false, error: SESSION_EXPIRED };
+  if (!(await isCurrentUserAdmin())) return { ok: false, error: NOT_OWNER };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from(CONTACT_MESSAGES_TABLE).update({ status }).eq("id", id);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin/messages");
+  revalidatePath("/admin");
+  return { ok: true };
+}
+
+export async function deleteMessage(id: number): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+  if (!(await getCurrentUser())) return { ok: false, error: SESSION_EXPIRED };
+  if (!(await isCurrentUserAdmin())) return { ok: false, error: NOT_OWNER };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.from(CONTACT_MESSAGES_TABLE).delete().eq("id", id);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin/messages");
+  revalidatePath("/admin");
   return { ok: true };
 }

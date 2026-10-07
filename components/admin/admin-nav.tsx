@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/admin/disciplines", label: "Disciplines" },
   { href: "/admin/projects", label: "Projects" },
   { href: "/admin/media", label: "Media" },
+  { href: "/admin/messages", label: "Messages" },
   { href: "/admin/capabilities", label: "Capabilities" },
   { href: "/admin/process", label: "Process" },
   { href: "/admin/stack", label: "Stack" },

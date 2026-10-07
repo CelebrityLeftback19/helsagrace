@@ -10,6 +10,7 @@ import { defaultContent, type Capability, type SiteContent } from "@/lib/content
 export const CONTENT_TABLE = "site_content";
 export const REVISIONS_TABLE = "content_revisions";
 export const MEDIA_BUCKET = "media";
+export const CONTACT_MESSAGES_TABLE = "contact_messages";
 
 export { isSupabaseConfigured };
 
