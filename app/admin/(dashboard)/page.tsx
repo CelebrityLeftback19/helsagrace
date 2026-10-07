@@ -32,6 +32,14 @@ export default async function AdminOverviewPage() {
           <p className="mt-1 text-sm text-muted">Name, hero statement, contact details</p>
         </Link>
 
+        <Link
+          href="/admin/media"
+          className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent"
+        >
+          <p className="font-serif text-lg">Media</p>
+          <p className="mt-1 text-sm text-muted">Uploaded screenshots you can reuse</p>
+        </Link>
+
         {cards.map((card) => (
           <Link
             key={card.label}

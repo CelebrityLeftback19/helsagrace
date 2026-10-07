@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/admin/profile", label: "Profile & hero" },
   { href: "/admin/disciplines", label: "Disciplines" },
   { href: "/admin/projects", label: "Projects" },
+  { href: "/admin/media", label: "Media" },
   { href: "/admin/capabilities", label: "Capabilities" },
   { href: "/admin/process", label: "Process" },
   { href: "/admin/stack", label: "Stack" },

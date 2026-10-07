@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Check, Plus, Trash2, Upload } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Images, Plus, Trash2, Upload } from "lucide-react";
 import { useCallback, useRef, useState, type ReactNode } from "react";
 
-import { uploadImage, type ActionResult } from "@/app/admin/actions";
+import { mediaList, uploadImage, type ActionResult } from "@/app/admin/actions";
 import { Field, inputClass } from "@/components/admin/ui";
+import type { MediaItem } from "@/lib/admin-data";
 import { cn } from "@/lib/utils";
 
 /* ── Save lifecycle ──────────────────────────────────────────── */
@@ -211,6 +212,8 @@ function ImageControl({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [library, setLibrary] = useState<MediaItem[] | null>(null);
 
   async function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -227,6 +230,14 @@ function ImageControl({
     if (inputRef.current) inputRef.current.value = "";
   }
 
+  async function toggleLibrary() {
+    const next = !libraryOpen;
+    setLibraryOpen(next);
+    if (next && library === null) {
+      setLibrary(await mediaList());
+    }
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -234,7 +245,7 @@ function ImageControl({
           value={value}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
-          className={inputClass}
+          className={cn(inputClass, "min-w-0 flex-1")}
         />
         <button
           type="button"
@@ -245,6 +256,15 @@ function ImageControl({
           <Upload className="h-3.5 w-3.5" aria-hidden />
           {busy ? "Uploading…" : "Upload"}
         </button>
+        <button
+          type="button"
+          onClick={toggleLibrary}
+          aria-expanded={libraryOpen}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-ink-mid transition-colors hover:border-accent hover:text-accent"
+        >
+          <Images className="h-3.5 w-3.5" aria-hidden />
+          Library
+        </button>
       </div>
 
       <input
@@ -254,6 +274,34 @@ function ImageControl({
         className="hidden"
         onChange={handleFile}
       />
+
+      {libraryOpen ? (
+        <div className="rounded-lg border border-border bg-surface p-2">
+          {library === null ? (
+            <p className="px-1 py-2 text-xs text-muted">Loading…</p>
+          ) : library.length === 0 ? (
+            <p className="px-1 py-2 text-xs text-muted">Nothing uploaded yet.</p>
+          ) : (
+            <div className="grid max-h-56 grid-cols-3 gap-2 overflow-y-auto p-1 sm:grid-cols-4">
+              {library.map((item) => (
+                <button
+                  key={item.name}
+                  type="button"
+                  title={item.name}
+                  onClick={() => {
+                    onChange(item.url);
+                    setLibraryOpen(false);
+                  }}
+                  className="overflow-hidden rounded-md border border-border transition-colors hover:border-accent"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={item.url} alt={item.name} className="h-14 w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : null}
 
       {error ? (
         <span role="alert" className="text-xs font-medium text-red-600">

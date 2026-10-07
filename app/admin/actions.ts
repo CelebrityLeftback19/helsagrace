@@ -3,8 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { getRevisionData } from "@/lib/admin-data";
-import { CONTENT_TABLE, REVISIONS_TABLE, getContent, isSupabaseConfigured } from "@/lib/cms";
+import { getRevisionData, listMedia, type MediaItem } from "@/lib/admin-data";
+import {
+  CONTENT_TABLE,
+  MEDIA_BUCKET,
+  REVISIONS_TABLE,
+  getContent,
+  isSupabaseConfigured,
+} from "@/lib/cms";
 import type { SiteContent } from "@/lib/content";
 import {
   createSupabaseServerClient,
@@ -18,7 +24,6 @@ export type UploadResult = { ok: true; url: string } | { ok: false; error: strin
 const NOT_OWNER = "This account isn't on the owner allowlist.";
 const SESSION_EXPIRED = "Your session has expired. Please sign in again.";
 
-const MEDIA_BUCKET = "media";
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp", "image/avif", "image/gif"];
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 
@@ -149,4 +154,28 @@ export async function signOut(): Promise<void> {
   }
   revalidatePath("/admin");
   redirect("/admin/login");
+}
+
+/* ── Media library ───────────────────────────────────────────── */
+
+/** Lists uploaded media for the library and the in-editor picker. */
+export async function mediaList(): Promise<MediaItem[]> {
+  if (!isSupabaseConfigured()) return [];
+  if (!(await isCurrentUserAdmin())) return [];
+  return listMedia();
+}
+
+export async function deleteMedia(name: string): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+  if (!(await getCurrentUser())) return { ok: false, error: SESSION_EXPIRED };
+  if (!(await isCurrentUserAdmin())) return { ok: false, error: NOT_OWNER };
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).remove([name]);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/admin/media");
+  return { ok: true };
 }

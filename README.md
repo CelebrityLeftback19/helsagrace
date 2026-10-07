@@ -95,9 +95,11 @@ updates immediately.
   `is_admin()` function checks the signed-in email against it, and **every RLS policy uses
   it** — so even a valid Supabase user who isn't allowlisted cannot read revisions or write
   content. The app checks the same rule for a friendly error and to block sign-in.
-- **Uploads.** Project screenshots can be uploaded directly from the admin project editor to
-  the public `media` bucket; the editor stores the resulting public URL. `next.config.ts`
-  allow-lists the Supabase storage host so `next/image` can optimise those URLs.
+- **Uploads & media library.** Screenshots upload to the public `media` bucket from either
+  `/admin/media` or a project's screenshot field. `/admin/media` lists every upload with
+  copy-URL and delete, and the editor's image fields have a **Library** picker so the same
+  image can be reused across projects. `next.config.ts` allow-lists the Supabase storage host
+  so `next/image` can optimise those URLs.
 - **RLS**: anyone may read content (it's a public site); only allowlisted owners may write.
 - Reading merges the stored document over the code defaults, so a field added in code later
   still renders until it's edited in the admin.

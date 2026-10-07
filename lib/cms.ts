@@ -7,8 +7,9 @@ import {
 } from "@/lib/supabase/env";
 import { defaultContent, type Capability, type SiteContent } from "@/lib/content";
 
-const CONTENT_TABLE = "site_content";
-const REVISIONS_TABLE = "content_revisions";
+export const CONTENT_TABLE = "site_content";
+export const REVISIONS_TABLE = "content_revisions";
+export const MEDIA_BUCKET = "media";
 
 export { isSupabaseConfigured };
 
@@ -79,5 +80,3 @@ export async function getContent(): Promise<SiteContent> {
 }
 
 export type Revision = { id: number; label: string | null; createdAt: string };
-
-export { CONTENT_TABLE, REVISIONS_TABLE };
