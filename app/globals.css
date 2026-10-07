@@ -83,41 +83,8 @@
   }
 }
 
-/* ── Motion: hero entrance, section rules, screenshots ───────── */
-@keyframes heroIn {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes heroLine {
-  from {
-    clip-path: inset(-0.1em -0.35em 105% -0.35em);
-    transform: translateY(0.18em);
-  }
-  to {
-    clip-path: inset(-0.15em -0.35em -0.35em -0.35em);
-    transform: none;
-  }
-}
-
+/* ── Section rules + screenshot reveals ──────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-hero] [data-hero-item] {
-    opacity: 0;
-    animation: heroIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: var(--d, 0ms);
-  }
-
-  .js .hero-line > span {
-    animation: heroLine 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: var(--d, 0ms);
-  }
-
   .js [data-reveal] .rule-line {
     transform: scaleX(0);
     transform-origin: left center;
@@ -142,6 +109,96 @@
     opacity: 1;
     clip-path: inset(0 0 0 0);
     transform: none;
+  }
+}
+
+/* ── Smooth scroll (Lenis) ───────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Keep word-mask reveals from clipping descenders. */
+.hero-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  vertical-align: bottom;
+}
+
+/* ── Custom cursor ───────────────────────────────────────────── */
+.cursor-el {
+  display: none;
+}
+
+html.has-custom-cursor .cursor-el {
+  display: flex;
+}
+
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button {
+  cursor: none;
+}
+
+html.has-custom-cursor input,
+html.has-custom-cursor textarea,
+html.has-custom-cursor select {
+  cursor: auto;
+}
+
+/* ── Marquee ─────────────────────────────────────────────────── */
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee {
+    animation: marquee-left var(--marquee-duration, 32s) linear infinite;
+  }
+
+  .marquee[data-direction="right"] {
+    animation-name: marquee-right;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .marquee-clone {
+    display: none;
   }
 }
 

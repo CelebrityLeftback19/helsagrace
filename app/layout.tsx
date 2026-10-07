@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 
+import { Cursor } from "@/components/motion/cursor";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -67,7 +71,13 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <SmoothScroll>
+          <ScrollProgress />
+          <Cursor />
+          {children}
+        </SmoothScroll>
+      </body>
     </html>
   );
 }
