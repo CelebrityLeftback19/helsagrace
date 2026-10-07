@@ -72,13 +72,13 @@ export function Cursor() {
       <div
         ref={dotRef}
         aria-hidden
-        className="cursor-el pointer-events-none fixed left-0 top-0 z-[140] h-1.5 w-1.5 items-center justify-center rounded-full bg-accent"
+        className="cursor-el pointer-events-none fixed left-0 top-0 z-[300] h-1.5 w-1.5 items-center justify-center rounded-full bg-accent"
       />
       <div
         ref={ringRef}
         aria-hidden
         className={cn(
-          "cursor-el pointer-events-none fixed left-0 top-0 z-[139] items-center justify-center rounded-full text-[10px] font-medium uppercase tracking-[0.14em] transition-[width,height,background-color,color,border-color] duration-200 ease-out",
+          "cursor-el pointer-events-none fixed left-0 top-0 z-[299] items-center justify-center rounded-full text-[10px] font-medium uppercase tracking-[0.14em] transition-[width,height,background-color,color,border-color] duration-200 ease-out",
           active
             ? "h-[68px] w-[68px] border border-transparent bg-ink text-white"
             : "h-8 w-8 border border-ink/25 bg-transparent text-transparent",
