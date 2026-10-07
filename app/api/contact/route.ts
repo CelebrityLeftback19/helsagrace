@@ -1,7 +1,9 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 
 import { getContent } from "@/lib/cms";
 import { saveContactMessage } from "@/lib/contact";
+import { renderContactNotification } from "@/lib/email/contact-notification";
 
 export const runtime = "nodejs";
 
@@ -44,6 +46,8 @@ async function sendEmail(input: {
   email: string;
   subject: string;
   message: string;
+  reference: string;
+  siteUrl: string;
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return false;
@@ -51,21 +55,33 @@ async function sendEmail(input: {
   const recipient = process.env.CONTACT_TO_EMAIL || (await getContent()).site.email;
   const from = process.env.CONTACT_FROM_EMAIL || "onboarding@resend.dev";
 
+  const { subject, html, text } = renderContactNotification({
+    name: input.name,
+    email: input.email,
+    subject: input.subject,
+    message: input.message,
+    reference: input.reference,
+    siteUrl: input.siteUrl,
+  });
+
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        // Lets Resend dedupe a retried request instead of sending twice.
+        "Idempotency-Key": input.reference,
       },
       body: JSON.stringify({
         from,
         to: [recipient],
         reply_to: input.email,
-        subject: input.subject
-          ? `Portfolio enquiry — ${input.subject}`
-          : `Portfolio enquiry from ${input.name}`,
-        text: `Name: ${input.name}\nEmail: ${input.email}\n\n${input.message}`,
+        subject,
+        html,
+        text,
+        // Stops Gmail from collapsing every enquiry into a single thread.
+        headers: { "X-Entity-Ref-ID": input.reference },
       }),
     });
 
@@ -120,7 +136,17 @@ export async function POST(request: Request) {
     return badRequest("Your message is a little long — try trimming it.");
   }
 
-  const emailed = await sendEmail({ name, email, subject, message });
+  const reference = randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
+  const siteUrl = new URL(request.url).origin;
+
+  const emailed = await sendEmail({
+    name,
+    email,
+    subject,
+    message,
+    reference,
+    siteUrl,
+  });
   const stored = await saveContactMessage({ name, email, subject, message, emailed });
 
   if (!emailed && !stored) {
