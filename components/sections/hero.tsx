@@ -2,29 +2,13 @@
 
 import { gsap } from "gsap";
 import { ArrowRight } from "lucide-react";
-import { Fragment, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { Magnetic } from "@/components/motion/magnetic";
+import { MaskedWords } from "@/components/motion/masked-words";
 import { prefersReducedMotion } from "@/components/motion/smooth-scroll";
 import { resolveIcon } from "@/lib/icons";
 import type { Discipline, SiteSettings } from "@/lib/content";
-
-/** Splits a line into word masks so GSAP can reveal each word from below. */
-function MaskedWords({ text }: { text: string }) {
-  const words = text.split(" ");
-  return (
-    <>
-      {words.map((word, index) => (
-        <Fragment key={`${word}-${index}`}>
-          <span className="hero-mask">
-            <span className="hero-word inline-block">{word}</span>
-          </span>
-          {index < words.length - 1 ? " " : null}
-        </Fragment>
-      ))}
-    </>
-  );
-}
 
 export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: Discipline[] }) {
   const rootRef = useRef<HTMLElement>(null);

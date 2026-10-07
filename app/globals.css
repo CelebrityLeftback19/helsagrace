@@ -231,3 +231,40 @@ html.has-custom-cursor select {
   white-space: nowrap;
   border: 0;
 }
+
+/* ── Cinematic 404 / error stages ────────────────────────────── */
+@keyframes guide-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateY(-2px);
+  }
+}
+
+.guide-blink {
+  animation: guide-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.14);
+  }
+}
+
+.kenburns {
+  animation: kenburns 9s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-blink,
+  .kenburns {
+    animation: none;
+  }
+}

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 
+import { ClickBurst } from "@/components/motion/click-burst";
 import { Cursor } from "@/components/motion/cursor";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
@@ -75,6 +76,7 @@ export default function RootLayout({
         <SmoothScroll>
           <ScrollProgress />
           <Cursor />
+          <ClickBurst />
           {children}
         </SmoothScroll>
       </body>
