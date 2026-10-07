@@ -130,12 +130,12 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Keep word-mask reveals from clipping descenders. */
+/* Keep word-mask reveals from clipping descenders or italic overhangs. */
 .hero-mask {
   display: inline-block;
   overflow: hidden;
-  padding-bottom: 0.14em;
-  margin-bottom: -0.14em;
+  padding: 0 0.18em 0.14em;
+  margin: 0 -0.18em -0.14em;
   vertical-align: bottom;
 }
 

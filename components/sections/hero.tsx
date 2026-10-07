@@ -65,7 +65,7 @@ export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: D
 
           <h1
             id="hero-heading"
-            className="mb-6 font-serif text-[clamp(52px,7vw,88px)] font-normal leading-[1] tracking-[-0.03em]"
+            className="mb-6 font-serif text-[clamp(40px,9vw,88px)] font-normal leading-[1.02] tracking-[-0.03em]"
           >
             <span className="block">
               <MaskedWords text={site.heroLine1} />

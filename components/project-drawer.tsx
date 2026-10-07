@@ -275,7 +275,7 @@ function DrawerContent({
 
         <p className="mb-9 max-w-[640px] text-[17px] leading-[1.65] text-ink-mid">{project.summary}</p>
 
-        <dl className="mb-12 grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-px overflow-hidden rounded-xl border border-border bg-border">
+        <dl className="mb-12 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
           {project.meta.map((item) => (
             <div key={item.label} className="bg-surface px-5 py-4">
               <dt className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">
