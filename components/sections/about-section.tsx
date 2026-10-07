@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/count-up";
 import { Reveal } from "@/components/reveal";
 import { RichText } from "@/components/rich-text";
 import type { Stat } from "@/lib/content";
@@ -13,13 +14,14 @@ export function AboutSection({
     <section id="about" aria-labelledby="about-heading" className="px-[var(--px)] py-24">
       <div className="mx-auto max-w-[var(--max)]">
         <Reveal>
-          <div className="mb-14 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-6">
+          <div className="relative mb-14 flex flex-wrap items-end justify-between gap-3 pb-6">
             <h2
               id="about-heading"
               className="font-serif text-[clamp(32px,4vw,48px)] font-normal leading-[1.1] tracking-[-0.02em]"
             >
               About <em className="italic text-accent">me</em>
             </h2>
+            <span aria-hidden className="rule-line absolute inset-x-0 bottom-0 h-px bg-border" />
           </div>
         </Reveal>
 
@@ -42,7 +44,7 @@ export function AboutSection({
                   <dt className="sr-only">{stat.label}</dt>
                   <dd>
                     <span className="mb-1 block font-serif text-4xl font-normal leading-none text-ink">
-                      {stat.value}
+                      <CountUp value={stat.value} />
                       {stat.suffix ? <em className="italic text-accent">{stat.suffix}</em> : null}
                     </span>
                     <span className="block text-[13px] text-muted">{stat.label}</span>

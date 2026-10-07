@@ -6,7 +6,7 @@ export function ProcessSection({ processSteps }: { processSteps: ProcessStep[] }
     <section id="process" aria-labelledby="process-heading" className="px-[var(--px)] py-24">
       <div className="mx-auto max-w-[var(--max)]">
         <Reveal>
-          <div className="mb-14 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-6">
+          <div className="relative mb-14 flex flex-wrap items-end justify-between gap-3 pb-6">
             <h2
               id="process-heading"
               className="font-serif text-[clamp(32px,4vw,48px)] font-normal leading-[1.1] tracking-[-0.02em]"
@@ -14,6 +14,7 @@ export function ProcessSection({ processSteps }: { processSteps: ProcessStep[] }
               How I <em className="italic text-accent">think</em>
             </h2>
             <span className="text-[13px] font-medium text-muted">The approach</span>
+            <span aria-hidden className="rule-line absolute inset-x-0 bottom-0 h-px bg-border" />
           </div>
         </Reveal>
 

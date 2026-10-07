@@ -1,18 +1,28 @@
 import { ArrowRight } from "lucide-react";
+import type { CSSProperties } from "react";
 
 import { resolveIcon } from "@/lib/icons";
 import type { Discipline, SiteSettings } from "@/lib/content";
+
+/** Sets the animation delay via the `--d` custom property read by the CSS. */
+const delay = (milliseconds: number): CSSProperties =>
+  ({ "--d": `${milliseconds}ms` }) as CSSProperties;
 
 export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: Discipline[] }) {
   return (
     <section
       id="hero"
+      data-hero
       aria-labelledby="hero-heading"
       className="flex min-h-[92vh] items-center border-b border-border px-[var(--px)] pb-24 pt-[calc(var(--nav-h)+80px)]"
     >
       <div className="mx-auto grid w-full max-w-[var(--max)] items-center gap-[60px] min-[900px]:grid-cols-[1fr_340px]">
         <div>
-          <p className="mb-7 inline-flex items-center gap-2 text-[13px] font-medium text-muted before:block before:h-px before:w-6 before:bg-accent before:content-['']">
+          <p
+            data-hero-item
+            style={delay(0)}
+            className="mb-7 inline-flex items-center gap-2 text-[13px] font-medium text-muted before:block before:h-px before:w-6 before:bg-accent before:content-['']"
+          >
             {site.heroEyebrow}
           </p>
 
@@ -20,17 +30,28 @@ export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: D
             id="hero-heading"
             className="mb-6 font-serif text-[clamp(52px,7vw,88px)] font-normal leading-[1] tracking-[-0.03em]"
           >
-            {site.heroLine1}
-            <br />
-            <em className="italic text-accent">{site.heroLine2}</em>
+            <span className="hero-line block">
+              <span className="block" style={delay(90)}>
+                {site.heroLine1}
+              </span>
+            </span>
+            <span className="hero-line block">
+              <span className="block italic text-accent" style={delay(210)}>
+                {site.heroLine2}
+              </span>
+            </span>
           </h1>
 
-          <p className="mb-10 max-w-[520px] text-[clamp(16px,2vw,19px)] font-light leading-[1.55] text-ink-mid">
+          <p
+            data-hero-item
+            style={delay(340)}
+            className="mb-10 max-w-[520px] text-[clamp(16px,2vw,19px)] font-light leading-[1.55] text-ink-mid"
+          >
             {site.fullName} — <strong className="font-medium text-ink">{site.heroStrong}</strong>{" "}
             {site.heroCopy}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4">
+          <div data-hero-item style={delay(440)} className="flex flex-wrap items-center gap-4">
             <a
               href="#work"
               className="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-[15px] font-medium text-white transition-[background,transform] hover:-translate-y-px hover:bg-accent"
@@ -51,11 +72,13 @@ export function Hero({ site, disciplines }: { site: SiteSettings; disciplines: D
           aria-label="Disciplines"
           className="flex flex-col gap-3 min-[500px]:grid min-[500px]:grid-cols-2 min-[900px]:flex min-[900px]:flex-col"
         >
-          {disciplines.map((discipline) => {
+          {disciplines.map((discipline, index) => {
             const Icon = resolveIcon(discipline.icon);
             return (
               <div
                 key={discipline.label}
+                data-hero-item
+                style={delay(520 + index * 70)}
                 className="flex items-center gap-3.5 rounded-xl border border-border bg-surface px-5 py-4 transition-[border-color,box-shadow] hover:border-accent hover:shadow-[0_0_0_3px_var(--color-accent-light)]"
               >
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-light text-accent">

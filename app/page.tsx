@@ -24,15 +24,15 @@ export default async function HomePage() {
     <>
       <SiteHeader site={content.site} />
       <main>
-        <Hero site={content.site} disciplines={content.disciplines} />
         <ProjectDrawerProvider projects={content.projects}>
+          <Hero site={content.site} disciplines={content.disciplines} />
           <WorkSection projects={content.projects} />
+          <CapabilitiesSection capabilities={content.capabilities} projects={content.projects} />
+          <ProcessSection processSteps={content.processSteps} />
+          <StackSection stack={content.stack} />
+          <AboutSection aboutParagraphs={content.aboutParagraphs} stats={content.stats} />
+          <ContactSection site={content.site} />
         </ProjectDrawerProvider>
-        <CapabilitiesSection capabilities={content.capabilities} />
-        <ProcessSection processSteps={content.processSteps} />
-        <StackSection stack={content.stack} />
-        <AboutSection aboutParagraphs={content.aboutParagraphs} stats={content.stats} />
-        <ContactSection site={content.site} />
       </main>
       <SiteFooter site={content.site} />
     </>

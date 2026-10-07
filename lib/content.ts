@@ -64,7 +64,17 @@ export type Project = {
   liveLabel?: string;
 };
 
-export type Capability = { title: string; description: string; icon: IconKey };
+export type Capability = {
+  title: string;
+  description: string;
+  icon: IconKey;
+  /** The judgment behind the work — the decision the person would defend. */
+  decision: string;
+  /** Project whose real screenshot proves it. */
+  projectSlug?: string;
+  /** Which screenshot of that project to use (defaults to the first). */
+  proofIndex?: number;
+};
 export type ProcessStep = { numeral: string; title: string; description: string };
 export type Stat = { value: string; suffix: string; label: string };
 
@@ -407,37 +417,58 @@ export const capabilities: Capability[] = [
     title: "Product Design",
     icon: "layout-panel-left",
     description:
-      "I think in systems before I think in screens. Problem framing, user flows, information architecture — the work that makes a product coherent before it becomes beautiful.",
+      "I map the system before I draw a screen — roles, data and states first, pixels last.",
+    decision:
+      "On BigTown I attached dues to properties, not residents. Owners, tenants and caretakers change; the obligation doesn't.",
+    projectSlug: "bigtown",
+    proofIndex: 1,
   },
   {
     title: "UI/UX Design",
     icon: "pen-line",
     description:
-      "Interfaces that are accurate to the product they represent — not template-beautiful, but purposeful. Design systems that scale cleanly across multiple user roles.",
+      "Interfaces that are true to the product, designed for every role — not just the happy path.",
+    decision:
+      "Thirteen roles get thirteen views: a security officer's screen never shows a resident's money.",
+    projectSlug: "bigtown",
+    proofIndex: 2,
   },
   {
     title: "Frontend Development",
     icon: "code-xml",
     description:
-      "React, TypeScript, Tailwind — production-quality components, state management, and routing. The discipline to make the design actually work in the browser.",
+      "React, TypeScript and Tailwind to production quality — components that hold up across a whole app.",
+    decision:
+      "I build what I design, so the design system is load-bearing rather than a hand-off deck.",
+    projectSlug: "careercraft",
+    proofIndex: 0,
   },
   {
     title: "Backend & Database",
     icon: "database",
-    description:
-      "Supabase, PostgreSQL, Row-Level Security, edge functions, auth, migrations. I design the schema and write the policies that keep data safe and correctly scoped.",
+    description: "Supabase and PostgreSQL — schema, migrations and policy written together.",
+    decision:
+      "Row-Level Security is part of the product: estate-scoped policies mean no query can cross an estate boundary.",
+    projectSlug: "bigtown",
+    proofIndex: 3,
   },
   {
     title: "AI Integration",
     icon: "lightbulb",
-    description:
-      "LLM integration via Gemini — prompt design, edge function architecture, and building AI features that are genuinely useful rather than decorative.",
+    description: "LLM features built as product layers, not a chatbot bolted to the side.",
+    decision:
+      "Gemini reads the user's own résumé and the job description — per-paragraph rewriting, keys kept server-side.",
+    projectSlug: "careercraft",
+    proofIndex: 2,
   },
   {
     title: "Product Ops & Delivery",
     icon: "shield-check",
-    description:
-      "Phased roadmaps, dev team management, QA and test planning, Playwright test suites. I've shipped products and managed the teams that built them.",
+    description: "I ship what I build: code, migrations, tests, deploy.",
+    decision:
+      "The gap between design and production is mine to close — so I run the Playwright suites and the release.",
+    projectSlug: "deli",
+    proofIndex: 0,
   },
 ];
 

@@ -5,7 +5,7 @@ import {
   supabasePublicKey,
   supabaseUrl,
 } from "@/lib/supabase/env";
-import { defaultContent, type SiteContent } from "@/lib/content";
+import { defaultContent, type Capability, type SiteContent } from "@/lib/content";
 
 const CONTENT_TABLE = "site_content";
 const REVISIONS_TABLE = "content_revisions";
@@ -23,6 +23,24 @@ function publicClient() {
 }
 
 /**
+ * Capabilities gained `decision` / `projectSlug` fields after the first seed.
+ * Fill any missing fields from the defaults (matched by title with a positional
+ * fallback) so stored content written before the change still renders fully.
+ */
+function mergeCapabilities(stored: unknown): Capability[] {
+  if (!Array.isArray(stored)) return defaultContent.capabilities;
+
+  return stored.map((item, index) => {
+    const record = (item ?? {}) as Partial<Capability>;
+    const fallback =
+      defaultContent.capabilities.find((capability) => capability.title === record.title) ??
+      defaultContent.capabilities[index];
+
+    return { ...(fallback ?? {}), ...record } as Capability;
+  });
+}
+
+/**
  * Merges stored content over the defaults, so a field added to the codebase
  * after content was saved still renders until it is edited in the admin.
  */
@@ -33,7 +51,7 @@ export function mergeContent(stored: unknown): SiteContent {
     site: { ...defaultContent.site, ...(partial.site ?? {}) },
     disciplines: partial.disciplines ?? defaultContent.disciplines,
     projects: partial.projects ?? defaultContent.projects,
-    capabilities: partial.capabilities ?? defaultContent.capabilities,
+    capabilities: mergeCapabilities(partial.capabilities),
     processSteps: partial.processSteps ?? defaultContent.processSteps,
     stack: partial.stack ?? defaultContent.stack,
     aboutParagraphs: partial.aboutParagraphs ?? defaultContent.aboutParagraphs,

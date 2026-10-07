@@ -23,6 +23,11 @@ type DrawerContextValue = { openProject: (slug: string) => void };
 
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
+/** Access the case-study drawer from any client component inside the provider. */
+export function useProjectDrawer(): DrawerContextValue | null {
+  return useContext(DrawerContext);
+}
+
 /** Groups screenshots by their row number so pairs render side by side. */
 function groupScreens(screens: ProjectScreen[]): ProjectScreen[][] {
   const rows = new Map<number, ProjectScreen[]>();
@@ -70,48 +75,108 @@ export function ProjectDrawerProvider({
 
 export function ProjectStrip({ project }: { project: Project }) {
   const context = useContext(DrawerContext);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const [canPreview, setCanPreview] = useState(false);
+  const [previewActive, setPreviewActive] = useState(false);
+  const [previewBroken, setPreviewBroken] = useState(false);
+
+  const screen = project.screens[0];
+
+  // Only offer the cursor-follow preview on precise pointers, and never when
+  // the visitor prefers reduced motion.
+  useEffect(() => {
+    setCanPreview(
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  function handlePointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    const el = previewRef.current;
+    if (!el || !canPreview) return;
+    if (rafRef.current) return;
+
+    const { clientX: x, clientY: y } = event;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      const half = 170;
+      const clampedX = Math.min(Math.max(x, half + 16), window.innerWidth - half - 16);
+      const clampedY = Math.max(y - 28, 150);
+      el.style.transform = `translate3d(${clampedX}px, ${clampedY}px, 0) translate(-50%, -100%)`;
+    });
+  }
+
   if (!context) {
     throw new Error("ProjectStrip must be rendered inside <ProjectDrawerProvider>.");
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => context.openProject(project.slug)}
-      aria-label={`View ${project.name} case study`}
-      className={cn(
-        "group grid w-full grid-cols-[56px_1fr_auto] items-center gap-6 rounded py-7 text-left",
-        "border-b border-border first:border-t",
-        "transition-[background,padding] hover:bg-accent-light hover:px-4 hover:-mx-4",
-        "max-[600px]:grid-cols-[40px_1fr]",
-      )}
-    >
-      <span
-        aria-hidden
-        className="text-right font-serif text-[28px] italic leading-none text-border transition-colors group-hover:text-accent"
+    <>
+      <button
+        type="button"
+        onClick={() => context.openProject(project.slug)}
+        onPointerEnter={() => canPreview && setPreviewActive(true)}
+        onPointerLeave={() => setPreviewActive(false)}
+        onPointerMove={handlePointerMove}
+        aria-label={`View ${project.name} case study`}
+        className={cn(
+          "group grid w-full grid-cols-[56px_1fr_auto] items-center gap-6 rounded py-7 text-left",
+          "border-b border-border first:border-t",
+          "transition-[background,padding] hover:bg-accent-light hover:px-4 hover:-mx-4",
+          "max-[600px]:grid-cols-[40px_1fr]",
+        )}
       >
-        {project.index}
-      </span>
+        <span
+          aria-hidden
+          className="text-right font-serif text-[28px] italic leading-none text-border transition-colors group-hover:text-accent"
+        >
+          {project.index}
+        </span>
 
-      <span className="block">
-        <span className="mb-2 block font-serif text-[clamp(22px,3vw,30px)] font-normal leading-[1.2] tracking-[-0.02em]">
-          {project.name}
+        <span className="block">
+          <span className="mb-2 block font-serif text-[clamp(22px,3vw,30px)] font-normal leading-[1.2] tracking-[-0.02em]">
+            {project.name}
+          </span>
+          <span className="mb-2 flex flex-wrap items-center gap-2">
+            {project.tags.map((tag) => (
+              <TagPill key={tag.label} tag={tag} />
+            ))}
+          </span>
+          <span className="block max-w-[600px] text-sm leading-[1.55] text-muted">
+            {project.summary}
+          </span>
         </span>
-        <span className="mb-2 flex flex-wrap items-center gap-2">
-          {project.tags.map((tag) => (
-            <TagPill key={tag.label} tag={tag} />
-          ))}
-        </span>
-        <span className="block max-w-[600px] text-sm leading-[1.55] text-muted">
-          {project.summary}
-        </span>
-      </span>
 
-      <ArrowUpRight
-        aria-hidden
-        className="h-5 w-5 shrink-0 text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent max-[600px]:hidden"
-      />
-    </button>
+        <ArrowUpRight
+          aria-hidden
+          className="h-5 w-5 shrink-0 text-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent max-[600px]:hidden"
+        />
+      </button>
+
+      {canPreview && screen && !previewBroken ? (
+        <div
+          ref={previewRef}
+          aria-hidden
+          className={cn(
+            "pointer-events-none fixed left-0 top-0 z-[60] w-[340px] overflow-hidden rounded-xl border border-border bg-surface shadow-[0_24px_60px_-20px_rgba(15,15,20,0.45)] transition-opacity duration-200",
+            previewActive ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <CaseImage
+            src={screen.src}
+            alt=""
+            width={screen.width}
+            height={screen.height}
+            reveal={false}
+            onError={() => setPreviewBroken(true)}
+          />
+        </div>
+      ) : null}
+    </>
   );
 }
 

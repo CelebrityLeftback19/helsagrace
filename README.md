@@ -101,8 +101,18 @@ updates immediately.
 - **RLS**: anyone may read content (it's a public site); only allowlisted owners may write.
 - Reading merges the stored document over the code defaults, so a field added in code later
   still renders until it's edited in the admin.
-- Middleware refreshes the Supabase session and redirects unauthenticated `/admin` requests
-  to `/admin/login`. If Supabase isn't configured, `/admin` shows a setup notice instead.
+- **Capabilities are evidence-backed.** Each one pairs a one-line claim with a `decision`
+  (the judgment worth defending) and a proof screenshot drawn from a linked project
+  (`projectSlug` + `proofIndex`), so the skills section shows real work instead of asserting
+  adjectives.
+- Admin routes are gated in the server layout: unauthenticated visitors are redirected to
+  `/admin/login`, non-owner accounts see a "not an owner" screen, and every write re-checks
+  the allowlist. If Supabase isn't configured, `/admin` shows a setup notice instead.
+- **Middleware is intentionally not used.** A Next.js Edge middleware bundle threw an
+  `EvalError` ("Code generation from strings disallowed") under this local Node/Next
+  combination, and the server layout already enforces the same rule. The trade-off is that
+  the session is not proactively refreshed, so an owner signs in again when the access token
+  expires (about an hour).
 
 Add local screenshots to `public/images/` when you prefer to keep them in the repo — see
 `public/images/README.md`.
