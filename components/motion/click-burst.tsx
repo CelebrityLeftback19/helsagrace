@@ -21,13 +21,21 @@ export function ClickBurst() {
       container.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:0;height:0;pointer-events:none;z-index:290;`;
       document.body.appendChild(container);
 
+      // Note: every element starts at opacity 0 and the animation uses
+      // fill:"forwards". Without that, Web Animations snap the element back to
+      // its base style (opacity 1) the instant the animation ends — which left
+      // a lasting dot at the click point.
+      const animate = (el: HTMLElement, keyframes: Keyframe[], options: KeyframeAnimationOptions) =>
+        el.animate(keyframes, { fill: "forwards", ...options });
+
       // Brief bright core.
       const core = document.createElement("span");
       core.style.cssText =
-        "position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:9999px;" +
+        "position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:9999px;opacity:0;" +
         "background:radial-gradient(circle, rgba(91,79,232,0.95) 0%, rgba(91,79,232,0) 70%);";
       container.appendChild(core);
-      core.animate(
+      animate(
+        core,
         [
           { transform: "scale(0.4)", opacity: 0.95 },
           { transform: "scale(3)", opacity: 0 },
@@ -37,9 +45,10 @@ export function ClickBurst() {
 
       // Expanding splash ring.
       const ring = document.createElement("span");
-      ring.style.cssText = `position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:9999px;border:2px solid ${COLORS[0]};`;
+      ring.style.cssText = `position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:9999px;border:2px solid ${COLORS[0]};opacity:0;`;
       container.appendChild(ring);
-      ring.animate(
+      animate(
+        ring,
         [
           { transform: "scale(0.3)", opacity: 0.85 },
           { transform: "scale(2.6)", opacity: 0 },
@@ -58,10 +67,11 @@ export function ClickBurst() {
         const size = 2 + Math.random() * 3.5;
 
         const droplet = document.createElement("span");
-        droplet.style.cssText = `position:absolute;left:0;top:0;width:${size}px;height:${size}px;margin:${-size / 2}px 0 0 ${-size / 2}px;border-radius:9999px;background:${COLORS[i % COLORS.length]};`;
+        droplet.style.cssText = `position:absolute;left:0;top:0;width:${size}px;height:${size}px;margin:${-size / 2}px 0 0 ${-size / 2}px;border-radius:9999px;background:${COLORS[i % COLORS.length]};opacity:0;`;
         container.appendChild(droplet);
 
-        droplet.animate(
+        animate(
+          droplet,
           [
             { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
             { transform: `translate3d(${dx}px, ${dy + 10}px, 0) scale(0.2)`, opacity: 0 },
@@ -73,7 +83,7 @@ export function ClickBurst() {
         );
       }
 
-      window.setTimeout(() => container.remove(), 900);
+      window.setTimeout(() => container.remove(), 750);
     }
 
     const onPointerDown = (event: PointerEvent) => {

@@ -3,6 +3,7 @@ import { Instrument_Serif, Inter } from "next/font/google";
 
 import { ClickBurst } from "@/components/motion/click-burst";
 import { Cursor } from "@/components/motion/cursor";
+import { PageTransition } from "@/components/motion/page-transition";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 
@@ -77,6 +78,7 @@ export default function RootLayout({
           <ScrollProgress />
           <Cursor />
           <ClickBurst />
+          <PageTransition />
           {children}
         </SmoothScroll>
       </body>
