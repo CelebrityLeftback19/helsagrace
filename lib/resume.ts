@@ -134,6 +134,7 @@ export const defaultResume: ResumeData = {
 };
 
 export type ResumeRole =
+  | "ux-product-designer"
   | "product-designer"
   | "product-design-lead"
   | "design-engineer"
@@ -155,6 +156,41 @@ export type ResumeVariant = {
 };
 
 export const resumeVariants: ResumeVariant[] = [
+  {
+    slug: "ux-product-designer",
+    label: "UX/Product Designer",
+    title: "UX/Product Designer · AI-assisted build",
+    summary: [
+      "Enterprise Design Lead owning end-to-end product design — discovery, information architecture, flows, high-fidelity UI and design systems — then shipping it in code.",
+      "Lean and evidence-led: problem framing, competitive benchmarking and usability thinking turned into clear decisions, with four products shipped across SaaS, e-commerce, proptech and food delivery.",
+      "AI-first workflow — moving from wireframe to coded prototype in days with AI in the loop (Claude Code, Lovable), reviewing diffs rather than hand-writing every line, with accessibility and performance held from day one.",
+    ],
+    core: [
+      "End-to-end product design",
+      "Discovery & problem framing",
+      "Information architecture",
+      "User flows",
+      "High-fidelity UI",
+      "Design systems & tokens",
+      "Usability & concept testing",
+      "JTBD & opportunity framing",
+      "Accessibility (WCAG)",
+      "AI-assisted prototyping & build",
+    ],
+    tools: [
+      "Figma",
+      "FigJam",
+      "Claude Code",
+      "Lovable",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "Notion",
+    ],
+    projects: ["careercraft", "bigtown", "hype", "deli"],
+  },
   {
     slug: "product-designer",
     label: "Product Designer",
