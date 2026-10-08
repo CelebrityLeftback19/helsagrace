@@ -1,11 +1,5 @@
 import type { Project } from "@/lib/content";
-import {
-  resumeCertificates,
-  resumeContact,
-  resumeEducation,
-  resumeExperience,
-  type ResumeVariant,
-} from "@/lib/resume";
+import type { ResumeData, ResumeVariant } from "@/lib/resume";
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -24,11 +18,13 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 export function ResumeDocument({
   variant,
   projects,
+  resume,
 }: {
   variant: ResumeVariant;
   projects: Project[];
+  resume: ResumeData;
 }) {
-  const contact = resumeContact;
+  const contact = resume.contact;
   const featured = variant.projects
     .map((slug) => projects.find((project) => project.slug === slug))
     .filter((project): project is Project => Boolean(project));
@@ -54,11 +50,11 @@ export function ResumeDocument({
         </div>
 
         <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] text-muted">
-          <span>helsagrace.site</span>
+          <span>{contact.site}</span>
           <span aria-hidden className="text-border">·</span>
-          <span>github.com/CelebrityLeftback19</span>
+          <span>{contact.github}</span>
           <span aria-hidden className="text-border">·</span>
-          <span>linkedin.com/in/helsagrace</span>
+          <span>{contact.linkedin}</span>
         </div>
       </header>
 
@@ -88,6 +84,10 @@ export function ResumeDocument({
       </Section>
 
       <Section label="Selected product work">
+        {resume.projectNote ? (
+          <p className="mb-3 text-[12.5px] italic leading-[1.6] text-muted">{resume.projectNote}</p>
+        ) : null}
+
         <div className="flex flex-col gap-4">
           {featured.map((project) => (
             <div key={project.slug}>
@@ -109,7 +109,7 @@ export function ResumeDocument({
 
       <Section label="Experience">
         <div className="flex flex-col gap-4">
-          {resumeExperience.map((job) => (
+          {resume.experience.map((job) => (
             <div key={`${job.company}-${job.title}`}>
               <div className="flex flex-wrap items-baseline justify-between gap-x-3">
                 <h3 className="text-[14px] font-semibold text-ink">
@@ -134,7 +134,7 @@ export function ResumeDocument({
 
       <div className="grid gap-7 sm:grid-cols-2 print:grid-cols-2">
         <Section label="Education">
-          {resumeEducation.map((item) => (
+          {resume.education.map((item) => (
             <div key={item.school}>
               <h3 className="text-[14px] font-semibold text-ink">{item.qualification}</h3>
               <p className="text-[13px] text-ink-mid">{item.school}</p>
@@ -144,7 +144,7 @@ export function ResumeDocument({
         </Section>
 
         <Section label="Certificates">
-          {resumeCertificates.map((item) => (
+          {resume.certificates.map((item) => (
             <div key={item.name}>
               <h3 className="text-[14px] font-semibold text-ink">{item.name}</h3>
               <p className="text-[13px] text-ink-mid">{item.issuer}</p>
@@ -155,7 +155,7 @@ export function ResumeDocument({
       </div>
 
       <p className="resume-section mt-2 text-[11px] text-muted">
-        Also known as {contact.altName} · References available on request.
+        {contact.altName ? `Also known as ${contact.altName} · ` : ""}References available on request.
       </p>
     </article>
   );

@@ -58,6 +58,14 @@ export function mergeContent(stored: unknown): SiteContent {
     stack: partial.stack ?? defaultContent.stack,
     aboutParagraphs: partial.aboutParagraphs ?? defaultContent.aboutParagraphs,
     stats: partial.stats ?? defaultContent.stats,
+    resume: {
+      ...defaultContent.resume,
+      ...(partial.resume ?? {}),
+      contact: {
+        ...defaultContent.resume.contact,
+        ...(partial.resume?.contact ?? {}),
+      },
+    },
   };
 }
 

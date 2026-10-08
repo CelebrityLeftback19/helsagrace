@@ -37,7 +37,7 @@ export default async function ResumeRolePage({
     <main className="min-h-screen bg-base">
       <ResumeToolbar active={variant.slug} />
       <div className="px-4 pb-24 print:p-0">
-        <ResumeDocument variant={variant} projects={content.projects} />
+        <ResumeDocument variant={variant} projects={content.projects} resume={content.resume} />
       </div>
     </main>
   );

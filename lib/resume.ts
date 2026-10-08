@@ -1,14 +1,137 @@
 /**
  * Résumé content + role-targeted variants.
  *
- * One data set, many framings. Each variant changes the headline, summary,
- * skill emphasis and the order of the product work — but the underlying facts
- * (roles, dates, education) never change, so nothing here contradicts another
- * variant.
- *
- * Product work is pulled from lib/content.ts so the site and every résumé stay
- * in sync.
+ * `defaultResume` is the editable source of truth (the admin stores an edited
+ * copy in Supabase; anything missing falls back here). The variants below are
+ * code — they are the "examples" that reframe the same facts for different
+ * target roles.
  */
+
+export type ResumeContact = {
+  name: string;
+  altName: string;
+  location: string;
+  email: string;
+  phone: string;
+  availability: string;
+  site: string;
+  github: string;
+  linkedin: string;
+};
+
+export type ResumeJob = {
+  company: string;
+  location: string;
+  title: string;
+  dates: string;
+  bullets: string[];
+};
+
+export type ResumeEducationItem = {
+  school: string;
+  qualification: string;
+  dates: string;
+};
+
+export type ResumeCertificateItem = {
+  name: string;
+  issuer: string;
+  dates: string;
+};
+
+export type ResumeData = {
+  contact: ResumeContact;
+  /** Shown above the featured product work. */
+  projectNote: string;
+  experience: ResumeJob[];
+  education: ResumeEducationItem[];
+  certificates: ResumeCertificateItem[];
+};
+
+export const defaultResume: ResumeData = {
+  contact: {
+    name: "HelsaGrace Okporho",
+    altName: "",
+    location: "Port Harcourt, Nigeria",
+    email: "oghenenyerhovwo.va@gmail.com",
+    phone: "+234 81 4948 9010",
+    availability: "Open to remote roles worldwide · WAT (UTC+1)",
+    site: "helsagrace.site",
+    github: "github.com/CelebrityLeftback19",
+    linkedin: "linkedin.com/in/helsagrace",
+  },
+  projectNote:
+    "Independent products — designed, built and shipped end-to-end on my own.",
+  experience: [
+    {
+      company: "CVtoCAREER",
+      location: "Remote",
+      title: "Enterprise Design Lead",
+      dates: "Aug 2026 – Present",
+      bullets: [
+        "Produce the interface designs — flows, screens and states — that the technology team builds from in each sprint.",
+        "Translate business requirements into build-ready design specifications, working directly with engineers.",
+        "Own design quality and consistency across the enterprise product as it scales.",
+      ],
+    },
+    {
+      company: "CVtoCAREER",
+      location: "Remote",
+      title: "Business Analyst & UI/UX Documentation Lead",
+      dates: "Jun 2025 – Present",
+      bullets: [
+        "Lead the design team in turning structured feature documentation into high-fidelity mockups and interface flows.",
+        "Document and categorise UI/UX features by type, persona, platform and market across landing, dashboard and transfer pages.",
+        "Benchmark money-transfer platforms to inform the MVP roadmap, and standardise documentation frameworks for future releases.",
+      ],
+    },
+    {
+      company: "CVtoCAREER",
+      location: "Remote",
+      title: "Client Optimization Specialist",
+      dates: "Apr 2025 – Present",
+      bullets: [
+        "Optimised 100+ client profiles — keyword classification, title refinement and campaign alignment — across engineering, health and tech.",
+        "Ran job-market analysis and produced concise, actionable reports that improved role-specific targeting.",
+      ],
+    },
+    {
+      company: "CVtoCAREER",
+      location: "Remote",
+      title: "Customer Onboarding & Relationship Specialist",
+      dates: "May 2025 – Present",
+      bullets: [
+        "Onboarded clients over chat, email and phone; logged needs and preferences to improve service flow and retention.",
+      ],
+    },
+    {
+      company: "Lusfane Nigeria Limited",
+      location: "Nigeria",
+      title: "Virtual Administrative Assistant",
+      dates: "Nov 2023 – Feb 2025",
+      bullets: [
+        "Managed executive calendars, agendas and virtual meetings; built structured spreadsheets for data and task tracking.",
+        "Delivered customer support over email and live chat, resolving enquiries quickly and building client relationships.",
+      ],
+    },
+    {
+      company: "Dikovis International Limited",
+      location: "Nigeria",
+      title: "Event Planning Assistant",
+      dates: "Aug 2022 – Oct 2023",
+      bullets: [
+        "Planned event logistics — budgeting, vendor management and day-of coordination.",
+        "Ran post-event evaluations and summary reports; kept the team aligned with Trello, Slack and shared calendars.",
+      ],
+    },
+  ],
+  education: [
+    { school: "Madonna University, Nigeria", qualification: "B.Sc Anatomy", dates: "2022" },
+  ],
+  certificates: [
+    { name: "ALX Virtual Assistant Program", issuer: "ALX Africa", dates: "Nov 2024" },
+  ],
+};
 
 export type ResumeRole =
   | "product-designer"
@@ -29,100 +152,14 @@ export type ResumeVariant = {
   projects: string[];
 };
 
-export const resumeContact = {
-  name: "HelsaGrace Okporho",
-  /** Legal/alternate name recruiters may have on file. */
-  altName: "Oghenenyerhovwo Okporho",
-  location: "Port Harcourt, Nigeria",
-  email: "oghenenyerhovwo.va@gmail.com",
-  phone: "+234 81 4948 9010",
-  site: "https://helsagrace.site",
-  github: "https://github.com/CelebrityLeftback19",
-  linkedin: "https://linkedin.com/in/helsagrace",
-  availability: "Open to remote roles worldwide · WAT (UTC+1)",
-} as const;
-
-export type ResumeJob = {
-  company: string;
-  location: string;
-  title: string;
-  dates: string;
-  bullets: string[];
-};
-
-export const resumeExperience: ResumeJob[] = [
-  {
-    company: "CVtoCAREER",
-    location: "Remote",
-    title: "Business Analyst & UI/UX Documentation Lead",
-    dates: "Jun 2025 – Present",
-    bullets: [
-      "Lead the design team in turning structured feature documentation into high-fidelity mockups and interface flows.",
-      "Document and categorise UI/UX features by type, persona, platform and market across landing, dashboard and transfer pages.",
-      "Benchmark money-transfer platforms to inform the MVP roadmap, and standardise documentation frameworks for future releases.",
-    ],
-  },
-  {
-    company: "CVtoCAREER",
-    location: "Remote",
-    title: "Client Optimization Specialist",
-    dates: "Apr 2025 – Present",
-    bullets: [
-      "Optimised 100+ client profiles — keyword classification, title refinement and campaign alignment — across engineering, health and tech.",
-      "Ran job-market analysis and produced concise, actionable reports that improved role-specific targeting.",
-    ],
-  },
-  {
-    company: "CVtoCAREER",
-    location: "Remote",
-    title: "Customer Onboarding & Relationship Specialist",
-    dates: "May 2025 – Present",
-    bullets: [
-      "Onboarded clients over chat, email and phone; logged needs and preferences to improve service flow and retention.",
-    ],
-  },
-  {
-    company: "Lusfane Nigeria Limited",
-    location: "Nigeria",
-    title: "Virtual Administrative Assistant",
-    dates: "Nov 2023 – Feb 2025",
-    bullets: [
-      "Managed executive calendars, agendas and virtual meetings; built structured spreadsheets for data and task tracking.",
-      "Delivered customer support over email and live chat, resolving enquiries quickly and building client relationships.",
-    ],
-  },
-  {
-    company: "Dikovis International Limited",
-    location: "Nigeria",
-    title: "Event Planning Assistant",
-    dates: "Aug 2022 – Oct 2023",
-    bullets: [
-      "Planned event logistics — budgeting, vendor management and day-of coordination.",
-      "Ran post-event evaluations and summary reports; kept the team aligned with Trello, Slack and shared calendars.",
-    ],
-  },
-];
-
-export const resumeEducation = [
-  {
-    school: "Madonna University, Nigeria",
-    qualification: "B.Sc Anatomy",
-    dates: "2022",
-  },
-];
-
-export const resumeCertificates = [
-  { name: "ALX Virtual Assistant Program", issuer: "ALX Africa", dates: "Nov 2024" },
-];
-
 export const resumeVariants: ResumeVariant[] = [
   {
     slug: "product-designer",
     label: "Product Designer",
     title: "Product Designer · Full-Stack Developer",
     summary: [
-      "Product designer and full-stack developer who takes products from the first user problem to production — research, flows, interface, database and deploy.",
-      "Shipped four production products across SaaS, e-commerce, proptech and food delivery, owning design and build end-to-end.",
+      "Enterprise Design Lead and full-stack developer who takes products from the first user problem to production — research, flows, interface, database and deploy.",
+      "Shipped four independent products across SaaS, e-commerce, proptech and food delivery, owning design and build end-to-end.",
       "Background in business analysis and UI/UX documentation, so systems and roles are mapped before a screen is drawn.",
     ],
     core: [
@@ -143,7 +180,7 @@ export const resumeVariants: ResumeVariant[] = [
     label: "UI/UX Designer",
     title: "UI/UX Designer",
     summary: [
-      "UI/UX designer with four shipped products in production, covering research, wireframes, high-fidelity UI and design systems.",
+      "Enterprise Design Lead and UI/UX designer with four products shipped to production, covering research, wireframes, high-fidelity UI and design systems.",
       "Designs for every role, not just the happy path — admin consoles, empty and error states, and multi-persona flows.",
       "Works directly in code, so designs ship as built rather than handed off.",
     ],
@@ -165,7 +202,7 @@ export const resumeVariants: ResumeVariant[] = [
     label: "UI Designer",
     title: "UI Designer",
     summary: [
-      "UI designer who builds what she designs — four live products with distinctive, systemised interfaces.",
+      "Enterprise Design Lead and UI designer who builds what she designs — four live products with distinctive, systemised interfaces.",
       "Strong on typography, colour, component libraries and responsive craft, with the front-end skill to protect the details.",
       "Comfortable designing dense, data-heavy product UI, not just marketing pages.",
     ],
@@ -179,7 +216,7 @@ export const resumeVariants: ResumeVariant[] = [
       "Micro-interactions",
       "Accessibility",
     ],
-    tools: ["Figma", "Tailwind CSS", "React", "shadcn/ui", "Framer-style motion"],
+    tools: ["Figma", "Tailwind CSS", "React", "shadcn/ui", "Motion"],
     projects: ["hype", "deli", "careercraft", "bigtown"],
   },
   {
@@ -187,7 +224,7 @@ export const resumeVariants: ResumeVariant[] = [
     label: "UX Designer",
     title: "UX Designer",
     summary: [
-      "UX designer focused on systems and roles — mapping the data, permissions and states a product needs before designing the interface.",
+      "Enterprise Design Lead and UX designer focused on systems and roles — mapping the data, permissions and states a product needs before designing the interface.",
       "Documented and categorised product feature sets by persona and platform as a UI/UX documentation lead, then turned them into flows.",
       "Shipped four production products where role isolation and financial logic were the core design constraints.",
     ],
@@ -209,7 +246,7 @@ export const resumeVariants: ResumeVariant[] = [
     label: "Frontend Designer",
     title: "Frontend Designer",
     summary: [
-      "Frontend designer who closes the gap between the mock and the build — four production products designed and implemented end-to-end.",
+      "Enterprise Design Lead and frontend designer who closes the gap between the mock and the build — four production products designed and implemented end-to-end.",
       "Comfortable across semantic HTML, responsive CSS, design tokens, accessible components and motion.",
       "Also writes the backend, so components are designed against real data and states.",
     ],

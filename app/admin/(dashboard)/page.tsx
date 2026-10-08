@@ -41,6 +41,14 @@ export default async function AdminOverviewPage() {
         </Link>
 
         <Link
+          href="/admin/resume"
+          className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent"
+        >
+          <p className="font-serif text-lg">Résumé</p>
+          <p className="mt-1 text-sm text-muted">Résumé content, print to PDF</p>
+        </Link>
+
+        <Link
           href="/admin/messages"
           className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-accent"
         >

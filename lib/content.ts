@@ -6,6 +6,8 @@
    missing there falls back to these defaults.
    ───────────────────────────────────────────────────────────── */
 
+import { defaultResume, type ResumeData } from "@/lib/resume";
+
 export type IconKey =
   | "layout-panel-left"
   | "pen-line"
@@ -89,6 +91,7 @@ export type SiteContent = {
   stack: string[];
   aboutParagraphs: string[];
   stats: Stat[];
+  resume: ResumeData;
 };
 
 /* ── Site / contact ──────────────────────────────────────────── */
@@ -554,4 +557,5 @@ export const defaultContent: SiteContent = {
   stack,
   aboutParagraphs,
   stats,
+  resume: defaultResume,
 };
