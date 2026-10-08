@@ -7,7 +7,7 @@ import { useMemo, useRef, useState } from "react";
 import { deleteMedia, uploadImage } from "@/app/admin/actions";
 import { inputClass } from "@/components/admin/ui";
 import type { MediaItem } from "@/lib/admin-data";
-import { cn } from "@/lib/utils";
+import { cn, copyToClipboard } from "@/lib/utils";
 
 function formatBytes(bytes: number): string {
   if (!bytes) return "—";
@@ -66,12 +66,12 @@ export function MediaLibrary({ initial }: { initial: MediaItem[] }) {
   }
 
   async function copy(item: MediaItem) {
-    try {
-      await navigator.clipboard.writeText(item.url);
+    const ok = await copyToClipboard(item.url);
+    if (ok) {
       setCopied(item.name);
       window.setTimeout(() => setCopied(null), 2000);
-    } catch {
-      setError("Couldn't copy to the clipboard.");
+    } else {
+      setError("Couldn't copy automatically — select the URL and copy manually.");
     }
   }
 

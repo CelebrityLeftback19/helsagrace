@@ -26,7 +26,10 @@ const instrumentSerif = Instrument_Serif({
 const description =
   "HelsaGrace Okporho designs and builds digital products — from the first user problem to the last database migration. Product Design, UI/UX, Full-Stack Development, AI.";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://helsagrace.site";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "HelsaGrace — Product Designer & Full-Stack Developer",
     template: "%s · HelsaGrace",
@@ -64,7 +67,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${instrumentSerif.variable}`}
+      // The pre-paint script adds `js` / `intro-seen` to this element, so its
+      // class list intentionally differs from the server-rendered HTML.
+      suppressHydrationWarning
+    >
       <head>
         {/* Marks that JS is available so scroll-reveal can safely hide content first. */}
         <script
