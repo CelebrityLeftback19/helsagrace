@@ -6,7 +6,7 @@
    missing there falls back to these defaults.
    ───────────────────────────────────────────────────────────── */
 
-import { defaultResume, type ResumeData } from "@/lib/resume";
+import { defaultResume, type ResumeData } from "./resume";
 
 export type IconKey =
   | "layout-panel-left"
@@ -100,22 +100,21 @@ export const site: SiteSettings = {
   name: "HelsaGrace",
   nameEm: "Grace",
   fullName: "HelsaGrace Okporho",
-  location: "Nigeria",
-  positioning: "Product Designer · UI/UX Designer · Full-Stack Developer · AI Enthusiast",
-  heroEyebrow: "Based in Nigeria, building for everywhere",
+  location: "Port Harcourt, Nigeria",
+  positioning: "Enterprise Design Lead · Product Designer · Full-Stack Developer · AI",
+  heroEyebrow: "Enterprise Design Lead · Port Harcourt, Nigeria",
   heroLine1: "I design products.",
   heroLine2: "I also build them.",
-  heroStrong: "Product Designer, UI/UX Designer, Full-Stack Developer.",
+  heroStrong: "Enterprise Design Lead, Product Designer and Full-Stack Developer.",
   heroCopy:
     "From the first user problem to the last database migration, I own the entire build.",
-  // TODO: replace with real contact details before launch.
-  email: "helsagrace@example.com",
-  phone: "+234 — your number here",
-  phoneHref: "tel:+2340000000000",
+  email: "oghenenyerhovwo.va@gmail.com",
+  phone: "+234 81 4948 9010",
+  phoneHref: "tel:+2348149489010",
   linkedin: "https://linkedin.com/in/helsagrace",
   github: "https://github.com/CelebrityLeftback19",
-  // WhatsApp deep link — digits only, no + or spaces, e.g. https://wa.me/2348012345678
-  whatsapp: "https://wa.me/2340000000000",
+  // WhatsApp deep link — digits only, no + or spaces.
+  whatsapp: "https://wa.me/2348149489010",
 };
 
 /* ── Disciplines (hero) ──────────────────────────────────────── */
@@ -533,10 +532,9 @@ export const stack: string[] = [
 /* ── About ───────────────────────────────────────────────────── */
 
 export const aboutParagraphs: string[] = [
-  "I'm **HelsaGrace Okporho**, a product designer and full-stack developer based in Nigeria. I build digital products across their entire lifecycle — from the first whiteboard sketch of a user flow to the production database migrations and deployment configuration that make it live.",
-  "My background spans operations, systems building, and product management — which means I don't just design or just build. I think about **how a product runs as a business**, who the different users are, and what the system needs to be at a data level before I design the first screen.",
-  "The products I build tend to have real complexity: multiple user roles, admin consoles, financial logic, role-based access control, payment flows. I find that kind of problem genuinely interesting — the design challenge of making something that serves a security officer, a resident, and an estate manager, each with exactly the right view and exactly the right permissions.",
-  "Currently available for **product design**, **full-stack development**, and **end-to-end product builds**. Open to freelance, contract, and full-time roles.",
+  "I'm **HelsaGrace Okporho**, an Enterprise Design Lead and full-stack developer based in Port Harcourt, Nigeria. I take products from the first user problem to production — research, flows, interface, database and deploy.",
+  "As Enterprise Design Lead at CVtoCAREER I produce the interface designs the technology team builds from each sprint, translating business requirements into build-ready specifications. I think in systems: who the users are, what data exists, and what each role can see — before I draw a screen.",
+  "My work tends to have real complexity — multiple user roles, admin consoles, financial logic and payment flows. I've designed and shipped four products across SaaS, e-commerce, proptech and food delivery. Open to **remote product design and frontend roles**.",
 ];
 
 export const stats: Stat[] = [

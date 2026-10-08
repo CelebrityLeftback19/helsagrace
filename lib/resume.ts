@@ -135,6 +135,8 @@ export const defaultResume: ResumeData = {
 
 export type ResumeRole =
   | "product-designer"
+  | "product-design-lead"
+  | "design-engineer"
   | "ui-ux-designer"
   | "ui-designer"
   | "ux-designer"
@@ -284,6 +286,50 @@ export const resumeVariants: ResumeVariant[] = [
     ],
     tools: ["React", "Next.js", "TypeScript", "Supabase", "PostgreSQL", "Cloudflare Workers"],
     projects: ["careercraft", "bigtown", "deli", "hype"],
+  },
+  {
+    slug: "product-design-lead",
+    label: "Product Design Lead",
+    title: "Product Design Lead",
+    summary: [
+      "Enterprise Design Lead who runs design as part of delivery, not beside it — producing the interface work an engineering team builds from each sprint.",
+      "Leads from the front: documents the system, sets the interface standards, and keeps quality consistent as the product scales.",
+      "Four products shipped end-to-end, and the front-end skill to hold a build to the design.",
+    ],
+    core: [
+      "Design leadership",
+      "Product strategy",
+      "Design systems",
+      "Critique & standards",
+      "Cross-functional delivery",
+      "Multi-role UX",
+      "Prototyping",
+      "Front-end literacy",
+    ],
+    tools: ["Figma", "React", "TypeScript", "Tailwind CSS", "Supabase", "Notion"],
+    projects: ["bigtown", "careercraft", "hype", "deli"],
+  },
+  {
+    slug: "design-engineer",
+    label: "Design Engineer",
+    title: "Design Engineer",
+    summary: [
+      "Design engineer — the profile that designs the interface and ships it in code, without the hand-off.",
+      "Four production products built end-to-end in React, TypeScript and Next.js, including design systems that survive real data, states and permissions.",
+      "Comfortable owning a feature from Figma through accessibility, motion, performance and deploy.",
+    ],
+    core: [
+      "Design systems",
+      "Component architecture",
+      "React",
+      "TypeScript",
+      "Accessible UI",
+      "Motion",
+      "Prototyping",
+      "Design-to-code",
+    ],
+    tools: ["React", "Next.js", "TypeScript", "Tailwind CSS", "GSAP", "Supabase"],
+    projects: ["careercraft", "bigtown", "hype", "deli"],
   },
 ];
 
