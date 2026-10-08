@@ -2,9 +2,10 @@
  * HTML + plain-text email sent to the owner when someone submits the contact
  * form.
  *
- * Email-client constraints: table-based layout, inline styles, web-safe fonts
- * (Georgia for the wordmark/headings, Arial for body) because custom webfonts
- * don't load reliably in mail clients, and no external images.
+ * Email-client constraints: table-based layout, inline styles as the base,
+ * a small <style> block with media queries for narrow screens (supported by
+ * Gmail/Apple Mail/Outlook mobile; Outlook desktop ignores them, where the
+ * 600px layout applies anyway), web-safe fonts, and no external images.
  */
 
 export type ContactNotificationInput = {
@@ -80,57 +81,71 @@ export function renderContactNotification(input: ContactNotificationInput): {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
     <title>${subject}</title>
+    <style>
+      @media only screen and (max-width: 480px) {
+        .hg-container {
+          width: 100% !important;
+        }
+        .hg-pad {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+        .hg-headline {
+          font-size: 22px !important;
+          line-height: 1.3 !important;
+        }
+        .hg-button {
+          display: block !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          text-align: center !important;
+        }
+      }
+    </style>
   </head>
   <body style="margin:0;padding:0;background:${BASE};">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${BASE};">
       New enquiry from ${name}${subjectLine ? ` — ${safeSubject}` : ""}
     </div>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BASE};padding:32px 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${BASE};padding:28px 12px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid ${BORDER};border-radius:16px;overflow:hidden;">
+          <table role="presentation" class="hg-container" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid ${BORDER};border-radius:16px;overflow:hidden;">
 
             <tr>
-              <td style="background:${INK};padding:22px 32px;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                  <tr>
-                    <td style="font-family:${SERIF};font-size:20px;line-height:1;color:#ffffff;">
-                      Helsa<span style="font-style:italic;color:${ACCENT_SOFT};">Grace</span>
-                    </td>
-                    <td align="right" style="font-family:${SANS};font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);">
-                      New enquiry
-                    </td>
-                  </tr>
-                </table>
+              <td class="hg-pad" style="background:${INK};padding:22px 32px;text-align:center;">
+                <div style="font-family:${SERIF};font-size:20px;line-height:1.2;color:#ffffff;">
+                  Helsa<span style="font-style:italic;color:${ACCENT_SOFT};">Grace</span>
+                </div>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:32px 32px 4px;">
+              <td class="hg-pad" style="padding:32px 32px 4px;">
                 <p style="margin:0 0 10px;font-family:${SANS};font-size:12px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;color:${ACCENT};">
-                  Contact form
+                  New enquiry
                 </p>
-                <h1 style="margin:0;font-family:${SERIF};font-weight:400;font-size:26px;line-height:1.28;color:${INK};">
+                <h1 class="hg-headline" style="margin:0;font-family:${SERIF};font-weight:400;font-size:26px;line-height:1.3;color:${INK};">
                   ${name} would like to work with you.
                 </h1>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:20px 32px 0;">
+              <td class="hg-pad" style="padding:22px 32px 0;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                   <tr>
-                    <td style="width:96px;padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:12px;color:${MUTED};vertical-align:top;">From</td>
-                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:15px;line-height:1.5;color:${INK};">
+                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:12px;color:${MUTED};vertical-align:top;white-space:nowrap;padding-right:16px;">From</td>
+                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:15px;line-height:1.5;color:${INK};word-break:break-word;">
                       ${name} &middot; <a href="mailto:${input.email}" style="color:${ACCENT};text-decoration:none;">${email}</a>
                     </td>
                   </tr>
                   ${
                     subjectLine
                       ? `<tr>
-                    <td style="width:96px;padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:12px;color:${MUTED};vertical-align:top;">Subject</td>
-                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:15px;line-height:1.5;color:${INK};">
+                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:12px;color:${MUTED};vertical-align:top;white-space:nowrap;padding-right:16px;">Subject</td>
+                    <td style="padding:12px 0;border-top:1px solid ${BORDER};font-family:${SANS};font-size:15px;line-height:1.5;color:${INK};word-break:break-word;">
                       ${safeSubject}
                     </td>
                   </tr>`
@@ -141,21 +156,21 @@ export function renderContactNotification(input: ContactNotificationInput): {
             </tr>
 
             <tr>
-              <td style="padding:22px 32px 0;">
-                <div style="background:${BASE};border:1px solid ${BORDER};border-radius:12px;padding:20px 22px;font-family:${SANS};font-size:15px;line-height:1.65;color:${INK_SOFT};white-space:pre-wrap;">${message}</div>
+              <td class="hg-pad" style="padding:20px 32px 0;">
+                <div style="background:${BASE};border:1px solid ${BORDER};border-radius:12px;padding:20px 22px;font-family:${SANS};font-size:15px;line-height:1.65;color:${INK_SOFT};white-space:pre-wrap;word-break:break-word;">${message}</div>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:24px 32px 0;">
-                <a href="${replyHref}" style="display:inline-block;background:${ACCENT};color:#ffffff;font-family:${SANS};font-size:15px;font-weight:bold;text-decoration:none;padding:14px 30px;border-radius:9999px;">
+              <td class="hg-pad" style="padding:24px 32px 0;">
+                <a class="hg-button" href="${replyHref}" style="display:inline-block;background:${ACCENT};color:#ffffff;font-family:${SANS};font-size:15px;font-weight:bold;text-decoration:none;padding:14px 30px;border-radius:9999px;">
                   Reply to ${name}
                 </a>
               </td>
             </tr>
 
             <tr>
-              <td style="padding:16px 32px 32px;">
+              <td class="hg-pad" style="padding:16px 32px 32px;">
                 <p style="margin:0;font-family:${SANS};font-size:13px;line-height:1.6;color:${MUTED};">
                   Replying goes straight to ${name}. This enquiry is also stored in your admin under
                   <a href="${adminUrl}" style="color:${ACCENT};text-decoration:none;">Messages</a>.
@@ -164,7 +179,7 @@ export function renderContactNotification(input: ContactNotificationInput): {
             </tr>
 
             <tr>
-              <td style="background:${BASE};border-top:1px solid ${BORDER};padding:18px 32px;">
+              <td class="hg-pad" style="background:${BASE};border-top:1px solid ${BORDER};padding:18px 32px;">
                 <p style="margin:0;font-family:${SANS};font-size:12px;line-height:1.6;color:${MUTED};">
                   Sent from the contact form on
                   <a href="${siteUrl}" style="color:${MUTED};text-decoration:underline;">helsagrace.site</a>
