@@ -219,6 +219,38 @@ html.has-custom-cursor select {
   }
 }
 
+/* ── Résumé print ────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .no-print,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  .resume {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .resume a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  .resume-section {
+    break-inside: avoid;
+  }
+}
+
 /* ── Accessibility helper ────────────────────────────────────── */
 .sr-only {
   position: absolute;

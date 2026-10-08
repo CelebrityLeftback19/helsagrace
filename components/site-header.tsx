@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "#work", label: "Work" },
   { href: "#capabilities", label: "Capabilities" },
   { href: "#about", label: "About" },
+  { href: "/resume", label: "Résumé" },
 ] as const;
 
 export function SiteHeader({ site }: { site: SiteSettings }) {

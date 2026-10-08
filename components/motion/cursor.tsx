@@ -72,11 +72,13 @@ export function Cursor() {
       <div
         ref={dotRef}
         aria-hidden
+        data-print-hide
         className="cursor-el pointer-events-none fixed left-0 top-0 z-[300] h-1.5 w-1.5 items-center justify-center rounded-full bg-accent"
       />
       <div
         ref={ringRef}
         aria-hidden
+        data-print-hide
         className={cn(
           "cursor-el pointer-events-none fixed left-0 top-0 z-[299] items-center justify-center rounded-full text-[10px] font-medium uppercase tracking-[0.14em] transition-[width,height,background-color,color,border-color] duration-200 ease-out",
           active
