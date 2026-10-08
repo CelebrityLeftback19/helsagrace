@@ -52,7 +52,12 @@ async function sendEmail(input: {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return false;
 
-  const recipient = process.env.CONTACT_TO_EMAIL || (await getContent()).site.email;
+  const recipientSetting = process.env.CONTACT_TO_EMAIL || (await getContent()).site.email;
+  // Supports one address or several, comma-separated.
+  const recipients = recipientSetting
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
   const from = process.env.CONTACT_FROM_EMAIL || "onboarding@resend.dev";
 
   const { subject, html, text } = renderContactNotification({
@@ -64,8 +69,8 @@ async function sendEmail(input: {
     siteUrl: input.siteUrl,
   });
 
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
+  const send = (to: string[]) =>
+    fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -75,7 +80,7 @@ async function sendEmail(input: {
       },
       body: JSON.stringify({
         from,
-        to: [recipient],
+        to,
         reply_to: input.email,
         subject,
         html,
@@ -85,8 +90,24 @@ async function sendEmail(input: {
       }),
     });
 
+  try {
+    let response = await send(recipients);
+
     if (!response.ok) {
       const detail = await response.text().catch(() => "");
+
+      // Before a custom domain is verified, Resend's test sender only accepts
+      // the account owner and rejects the whole request otherwise. Fall back to
+      // the first recipient so at least that inbox still receives it.
+      if (recipients.length > 1 && response.status === 403 && /testing emails/i.test(detail)) {
+        console.warn("Resend test-sender limit: retrying with the first recipient only.");
+        response = await send([recipients[0]!]);
+        if (response.ok) return true;
+        const fallbackDetail = await response.text().catch(() => "");
+        console.error("Resend send failed:", response.status, fallbackDetail);
+        return false;
+      }
+
       console.error("Resend send failed:", response.status, detail);
       return false;
     }
