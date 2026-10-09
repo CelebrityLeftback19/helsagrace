@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
-type RemotePatterns = NonNullable<NonNullable<NextConfig["images"]>["remotePatterns"]>;
+type RemotePatterns = NonNullable<
+  NonNullable<NextConfig["images"]>["remotePatterns"]
+>;
 
 /**
  * Uploaded screenshots are served from Supabase Storage, so the public site's
@@ -9,8 +11,16 @@ type RemotePatterns = NonNullable<NonNullable<NextConfig["images"]>["remotePatte
  */
 function supabaseRemotePatterns(): RemotePatterns {
   const patterns: RemotePatterns = [
-    { protocol: "https", hostname: "**.supabase.co", pathname: "/storage/v1/object/public/**" },
-    { protocol: "https", hostname: "**.supabase.in", pathname: "/storage/v1/object/public/**" },
+    {
+      protocol: "https",
+      hostname: "**.supabase.co",
+      pathname: "/storage/v1/object/public/**",
+    },
+    {
+      protocol: "https",
+      hostname: "**.supabase.in",
+      pathname: "/storage/v1/object/public/**",
+    },
   ];
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -34,6 +44,14 @@ function supabaseRemotePatterns(): RemotePatterns {
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // Uploads run through Server Actions, and each request carries a single
+    // image (multi-select uploads loop one file at a time). The 1 MB default is
+    // below the 8 MB per-image cap enforced in `uploadImage`.
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
+  },
   images: {
     remotePatterns: supabaseRemotePatterns(),
   },
