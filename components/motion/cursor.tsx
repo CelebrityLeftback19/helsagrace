@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { prefersReducedMotion } from "@/components/motion/smooth-scroll";
@@ -16,8 +17,13 @@ export function Cursor() {
   const ringRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
   const [label, setLabel] = useState<string | null>(null);
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
 
   useEffect(() => {
+    // The admin is a tool, not a showcase — keep the native cursor there.
+    if (isAdmin) return;
+
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     if (!fine || prefersReducedMotion()) return;
 
@@ -65,7 +71,7 @@ export function Cursor() {
       window.removeEventListener("mouseover", onMouseOver);
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [isAdmin]);
 
   return (
     <>

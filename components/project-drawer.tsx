@@ -282,7 +282,9 @@ function DrawerContent({
               <dt className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">
                 {item.label}
               </dt>
-              <dd className="text-sm font-medium leading-snug text-ink">{item.value}</dd>
+              <dd className="break-words text-sm font-medium leading-snug text-ink [overflow-wrap:anywhere]">
+                {item.value}
+              </dd>
             </div>
           ))}
         </dl>
@@ -300,6 +302,7 @@ function DrawerContent({
                   alt={screen.alt}
                   width={screen.width}
                   height={screen.height}
+                  reveal={false}
                 />
               ))}
             </div>

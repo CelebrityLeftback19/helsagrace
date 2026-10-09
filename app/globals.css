@@ -249,6 +249,20 @@ html.has-custom-cursor select {
   .resume-section {
     break-inside: avoid;
   }
+
+  .resume h3,
+  .resume h2 {
+    break-after: avoid;
+  }
+
+  .resume li {
+    break-inside: avoid;
+  }
+
+  .resume p {
+    orphans: 2;
+    widows: 2;
+  }
 }
 
 /* ── Accessibility helper ────────────────────────────────────── */

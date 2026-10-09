@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 import { prefersReducedMotion } from "@/components/motion/smooth-scroll";
@@ -12,8 +13,11 @@ const COLORS = ["#5B4FE8", "#3D33C4", "#7A6FF0", "#EEECFF"];
  * finishes. Disabled for reduced motion.
  */
 export function ClickBurst() {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
+
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (isAdmin || prefersReducedMotion()) return;
 
     function burst(x: number, y: number) {
       const container = document.createElement("div");
@@ -93,7 +97,7 @@ export function ClickBurst() {
 
     window.addEventListener("pointerdown", onPointerDown);
     return () => window.removeEventListener("pointerdown", onPointerDown);
-  }, []);
+  }, [isAdmin]);
 
   return null;
 }

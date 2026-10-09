@@ -19,6 +19,8 @@ export async function generateMetadata({
   const variant = getVariant(role);
   return {
     title: variant ? `${variant.label} résumé — HelsaGrace` : "Résumé — HelsaGrace",
+    // Unlisted: reachable by link only, kept out of search results.
+    robots: { index: false, follow: false },
   };
 }
 

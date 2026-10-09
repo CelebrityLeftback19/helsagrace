@@ -59,6 +59,7 @@ async function main() {
     ...stored,
     site: { ...((stored.site as Record<string, unknown>) ?? {}), ...defaultContent.site },
     aboutParagraphs: defaultContent.aboutParagraphs,
+    capabilities: defaultContent.capabilities,
     resume: defaultContent.resume,
   };
 

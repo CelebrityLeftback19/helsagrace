@@ -11,7 +11,7 @@ export function TagPill({ tag, size = "sm" }: { tag: Tag; size?: "sm" | "md" }) 
   return (
     <span
       className={cn(
-        "inline-block rounded-full border font-semibold",
+        "inline-block max-w-full break-words rounded-full border font-semibold",
         size === "sm" ? "px-2.5 py-[3px] text-[11px] tracking-[0.04em]" : "px-3 py-1 text-xs",
         VARIANT_STYLES[tag.variant ?? "default"],
       )}

@@ -52,7 +52,7 @@ export const defaultResume: ResumeData = {
   contact: {
     name: "HelsaGrace Okporho",
     altName: "",
-    location: "Port Harcourt, Nigeria",
+    location: "Remote",
     email: "oghenenyerhovwo.va@gmail.com",
     phone: "+234 81 4948 9010",
     availability: "Open to remote roles worldwide · WAT (UTC+1)",

@@ -100,12 +100,12 @@ export const site: SiteSettings = {
   name: "HelsaGrace",
   nameEm: "Grace",
   fullName: "HelsaGrace Okporho",
-  location: "Port Harcourt, Nigeria",
-  positioning: "Enterprise Design Lead · Product Designer · Full-Stack Developer · AI",
-  heroEyebrow: "Enterprise Design Lead · Port Harcourt, Nigeria",
+  location: "Remote",
+  positioning: "Product Designer · Frontend Developer · Full-Stack",
+  heroEyebrow: "Product Designer & Frontend Developer · Remote",
   heroLine1: "I design products.",
   heroLine2: "I also build them.",
-  heroStrong: "Enterprise Design Lead, Product Designer and Full-Stack Developer.",
+  heroStrong: "Product Designer and Frontend Developer.",
   heroCopy:
     "From the first user problem to the last database migration, I own the entire build.",
   email: "oghenenyerhovwo.va@gmail.com",
@@ -458,6 +458,15 @@ export const capabilities: Capability[] = [
       "Row-Level Security is part of the product: estate-scoped policies mean no query can cross an estate boundary.",
     projectSlug: "bigtown",
     proofIndex: 3,
+  },
+  {
+    title: "Commerce & Payments",
+    icon: "shield-check",
+    description: "Storefronts designed around how customers actually pay, not how a template assumes.",
+    decision:
+      "On The Hype Aesthetics, bank transfer and pre-order deposits weren't edge cases to accommodate — they were the core design constraints.",
+    projectSlug: "hype",
+    proofIndex: 0,
   },
   {
     title: "AI Integration",

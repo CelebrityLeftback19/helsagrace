@@ -131,6 +131,7 @@ export function CapabilitiesSection({
                             alt={screen.alt}
                             width={screen.width}
                             height={screen.height}
+                            reveal={false}
                           />
                         ) : (
                           <div className="flex aspect-[16/9] items-center justify-center rounded-[10px] border border-white/10 bg-white/[0.03] text-xs text-white/40">

@@ -30,9 +30,9 @@ export function ResumeDocument({
     .filter((project): project is Project => Boolean(project));
 
   return (
-    <article className="resume mx-auto w-full max-w-[820px] bg-white px-10 py-12 text-ink print:px-0 print:py-0">
+    <article className="resume mx-auto w-full max-w-[820px] bg-white px-5 py-8 text-ink sm:px-10 sm:py-12 print:px-0 print:py-0">
       <header className="mb-8">
-        <h1 className="font-serif text-[34px] font-normal leading-none tracking-[-0.02em]">
+        <h1 className="font-serif text-[clamp(26px,6vw,34px)] font-normal leading-none tracking-[-0.02em]">
           {contact.name}
         </h1>
         <p className="mt-2 text-[15px] font-medium text-accent">{variant.title}</p>
@@ -40,7 +40,7 @@ export function ResumeDocument({
         <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] text-ink-mid">
           <span>{contact.location}</span>
           <span aria-hidden className="text-border">·</span>
-          <a href={`mailto:${contact.email}`} className="hover:text-accent">
+          <a href={`mailto:${contact.email}`} className="break-all hover:text-accent [overflow-wrap:anywhere]">
             {contact.email}
           </a>
           <span aria-hidden className="text-border">·</span>
@@ -50,11 +50,11 @@ export function ResumeDocument({
         </div>
 
         <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[12.5px] text-muted">
-          <span>{contact.site}</span>
+          <span className="break-all [overflow-wrap:anywhere]">{contact.site}</span>
           <span aria-hidden className="text-border">·</span>
-          <span>{contact.github}</span>
+          <span className="break-all [overflow-wrap:anywhere]">{contact.github}</span>
           <span aria-hidden className="text-border">·</span>
-          <span>{contact.linkedin}</span>
+          <span className="break-all [overflow-wrap:anywhere]">{contact.linkedin}</span>
         </div>
       </header>
 

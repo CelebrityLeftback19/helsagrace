@@ -19,6 +19,7 @@ export function PageTransition() {
   const covering = useRef(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
 
   // Reveal the newly-mounted page.
   useEffect(() => {
@@ -46,7 +47,7 @@ export function PageTransition() {
 
   // Intercept internal navigations so the curtain plays first.
   useEffect(() => {
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion() || isAdmin) return;
 
     function onClick(event: MouseEvent) {
       if (event.defaultPrevented || event.button !== 0) return;
@@ -96,7 +97,7 @@ export function PageTransition() {
 
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [router]);
+  }, [router, isAdmin]);
 
   return (
     <div
