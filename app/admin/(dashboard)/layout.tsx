@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { signOut } from "@/app/admin/actions";
+import { AdminBackButton } from "@/components/admin/admin-back-button";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { SetupNotice } from "@/components/admin/setup-notice";
 import { UnauthorizedNotice } from "@/components/admin/unauthorized-notice";
@@ -24,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-base">
       <div className="mx-auto flex max-w-[1180px] flex-col gap-8 px-6 py-8 lg:flex-row lg:gap-12">
-        <aside className="lg:w-56 lg:shrink-0">
+        <aside className="lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:w-56 lg:shrink-0 lg:self-start lg:overflow-y-auto">
           <div className="mb-6">
             <p className="font-serif text-lg">
               Helsa<em className="italic text-accent">Grace</em>
@@ -47,7 +48,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </p>
         </aside>
 
-        <main className="min-w-0 flex-1 pb-24">{children}</main>
+        <main className="min-w-0 flex-1 pb-24">
+          <AdminBackButton />
+          {children}
+        </main>
       </div>
     </div>
   );

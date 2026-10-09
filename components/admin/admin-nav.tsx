@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
-const LINKS = [
+export const ADMIN_LINKS = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/profile", label: "Profile & hero" },
   { href: "/admin/disciplines", label: "Disciplines" },
@@ -25,16 +25,19 @@ export function AdminNav() {
 
   return (
     <nav className="flex flex-col gap-0.5">
-      {LINKS.map((link) => {
-        const active =
-          link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
+      {ADMIN_LINKS.map((link) => {
+        const active = link.href === "/admin"
+          ? pathname === "/admin"
+          : pathname.startsWith(link.href);
         return (
           <Link
             key={link.href}
             href={link.href}
             className={cn(
               "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-              active ? "bg-accent-light text-accent" : "text-ink-mid hover:bg-surface",
+              active
+                ? "bg-accent-light text-accent"
+                : "text-ink-mid hover:bg-surface",
             )}
           >
             {link.label}
