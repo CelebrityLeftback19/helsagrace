@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { CaseImage } from "@/components/case-image";
+import { GalleryOverlay } from "@/components/image-gallery";
 import { prefersReducedMotion } from "@/components/motion/smooth-scroll";
 import { ProjectStrip, useProjectDrawer } from "@/components/project-drawer";
 import { Reveal } from "@/components/reveal";
@@ -15,6 +16,7 @@ import type { Project } from "@/lib/content";
 export function WorkSection({ projects }: { projects: Project[] }) {
   const drawer = useProjectDrawer();
   const [active, setActive] = useState(0);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const rowsRef = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -122,6 +124,7 @@ export function WorkSection({ projects }: { projects: Project[] }) {
                     width={screen.width}
                     height={screen.height}
                     reveal={false}
+                    onOpen={() => setGalleryIndex(0)}
                   />
                 ) : (
                   <div className="aspect-[16/10] rounded-[10px] border border-border bg-base" />
@@ -151,6 +154,19 @@ export function WorkSection({ projects }: { projects: Project[] }) {
           </aside>
         </div>
       </div>
+
+      {galleryIndex !== null && current ? (
+        <GalleryOverlay
+          images={current.screens.map((item) => ({
+            src: item.src,
+            alt: item.alt,
+            title: current.name,
+          }))}
+          index={galleryIndex}
+          onIndex={setGalleryIndex}
+          onClose={() => setGalleryIndex(null)}
+        />
+      ) : null}
     </section>
   );
 }

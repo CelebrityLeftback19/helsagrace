@@ -13,6 +13,7 @@ import {
 } from "react";
 
 import { CaseImage } from "@/components/case-image";
+import { GalleryOverlay } from "@/components/image-gallery";
 import { useLenis } from "@/components/motion/smooth-scroll";
 import { TagPill } from "@/components/tag";
 import type { Project, ProjectScreen } from "@/lib/content";
@@ -244,6 +245,12 @@ function DrawerContent({
   onClose: () => void;
   closeRef: React.RefObject<HTMLButtonElement | null>;
 }) {
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
+
+  // Every screenshot of this project, in display order, for prev/next browsing.
+  const flatScreens = groupScreens(project.screens).flat();
+  const screenIndex = new Map(flatScreens.map((screen, index) => [screen.src, index]));
+
   return (
     <>
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface/93 px-10 py-4 backdrop-blur-[8px] max-[600px]:px-5">
@@ -303,6 +310,7 @@ function DrawerContent({
                   width={screen.width}
                   height={screen.height}
                   reveal={false}
+                  onOpen={() => setGalleryIndex(screenIndex.get(screen.src) ?? 0)}
                 />
               ))}
             </div>
@@ -375,6 +383,19 @@ function DrawerContent({
           </a>
         ) : null}
       </div>
+
+      {galleryIndex !== null ? (
+        <GalleryOverlay
+          images={flatScreens.map((screen) => ({
+            src: screen.src,
+            alt: screen.alt,
+            title: project.name,
+          }))}
+          index={galleryIndex}
+          onIndex={setGalleryIndex}
+          onClose={() => setGalleryIndex(null)}
+        />
+      ) : null}
     </>
   );
 }
