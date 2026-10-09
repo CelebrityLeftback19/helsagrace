@@ -16,6 +16,8 @@ type CaseImageProps = {
   reveal?: boolean;
   /** Called once if the image fails to load. */
   onError?: () => void;
+  /** When provided, clicking opens this instead of the built-in viewer. */
+  onOpen?: () => void;
   className?: string;
 };
 
@@ -32,6 +34,7 @@ export function CaseImage({
   height = 807,
   reveal = true,
   onError,
+  onOpen,
   className,
 }: CaseImageProps) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -113,7 +116,7 @@ export function CaseImage({
       <button
         ref={ref}
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => (onOpen ? onOpen() : setOpen(true))}
         data-cursor="view"
         data-cursor-label="View"
         data-shot={shotAttr}

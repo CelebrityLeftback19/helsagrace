@@ -4,6 +4,7 @@ import { ArrowUpRight, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { CaseImage } from "@/components/case-image";
+import { GalleryOverlay, type GalleryImage } from "@/components/image-gallery";
 import { useProjectDrawer } from "@/components/project-drawer";
 import { Reveal } from "@/components/reveal";
 import { resolveIcon } from "@/lib/icons";
@@ -29,6 +30,17 @@ export function CapabilitiesSection({
   const drawer = useProjectDrawer();
   const [openIndex, setOpenIndex] = useState(0);
   const [canHover, setCanHover] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
+
+  // Flatten every capability proof into one browsable gallery, keeping a map
+  // from capability index to gallery index.
+  const proofs: GalleryImage[] = [];
+  const proofIndexFor = capabilities.map((capability) => {
+    const { screen } = proofFor(capability, projects);
+    if (!screen) return null;
+    proofs.push({ src: screen.src, alt: screen.alt, title: capability.title });
+    return proofs.length - 1;
+  });
 
   useEffect(() => {
     setCanHover(
@@ -64,6 +76,7 @@ export function CapabilitiesSection({
             const Icon = resolveIcon(capability.icon);
             const isOpen = openIndex === index;
             const { project, screen } = proofFor(capability, projects);
+            const proofIndex = proofIndexFor[index] ?? null;
 
             return (
               <div key={capability.title} className="border-b border-white/10">
@@ -132,6 +145,11 @@ export function CapabilitiesSection({
                             width={screen.width}
                             height={screen.height}
                             reveal={false}
+                            onOpen={
+                              proofIndex !== null
+                                ? () => setGalleryIndex(proofIndex)
+                                : undefined
+                            }
                           />
                         ) : (
                           <div className="flex aspect-[16/9] items-center justify-center rounded-[10px] border border-white/10 bg-white/[0.03] text-xs text-white/40">
@@ -166,6 +184,15 @@ export function CapabilitiesSection({
           })}
         </div>
       </div>
+
+      {galleryIndex !== null ? (
+        <GalleryOverlay
+          images={proofs}
+          index={galleryIndex}
+          onIndex={setGalleryIndex}
+          onClose={() => setGalleryIndex(null)}
+        />
+      ) : null}
     </section>
   );
 }
