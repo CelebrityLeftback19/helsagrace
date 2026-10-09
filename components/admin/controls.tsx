@@ -203,10 +203,12 @@ export type RepeaterField = {
 function ImageControl({
   value,
   onChange,
+  onUploadMany,
   placeholder,
 }: {
   value: string;
   onChange: (next: string) => void;
+  onUploadMany?: (urls: string[]) => void;
   placeholder?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -215,19 +217,36 @@ function ImageControl({
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [library, setLibrary] = useState<MediaItem[] | null>(null);
 
-  async function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  async function handleFiles(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length === 0) return;
 
     setBusy(true);
     setError(null);
-    const result = await uploadImage(file);
+
+    const urls: string[] = [];
+    let firstError: string | null = null;
+
+    for (const file of files) {
+      const result = await uploadImage(file);
+      if (result.ok) urls.push(result.url);
+      else if (!firstError) firstError = result.error;
+    }
+
     setBusy(false);
-
-    if (result.ok) onChange(result.url);
-    else setError(result.error);
-
     if (inputRef.current) inputRef.current.value = "";
+
+    if (firstError) {
+      setError(
+        urls.length > 0
+          ? `${firstError} (${urls.length} of ${files.length} uploaded.)`
+          : firstError,
+      );
+    }
+    if (urls.length === 0) return;
+
+    if (urls.length === 1 || !onUploadMany) onChange(urls[0]!);
+    else onUploadMany(urls);
   }
 
   async function toggleLibrary() {
@@ -271,8 +290,9 @@ function ImageControl({
         ref={inputRef}
         type="file"
         accept="image/*"
+        multiple
         className="hidden"
-        onChange={handleFile}
+        onChange={handleFiles}
       />
 
       {libraryOpen ? (
@@ -407,6 +427,19 @@ export function Repeatable<T extends object>({
                           value={current}
                           placeholder={field.placeholder}
                           onChange={(next) => update(index, field, next)}
+                          onUploadMany={(urls) => {
+                            const [first, ...rest] = urls;
+                            if (first === undefined) return;
+                            const next = value.map((entry, i) =>
+                              i === index
+                                ? ({ ...entry, [field.key]: first } as T)
+                                : entry,
+                            );
+                            for (const url of rest) {
+                              next.push({ ...blank, [field.key]: url } as T);
+                            }
+                            onChange(next);
+                          }}
                         />
                       );
                     }

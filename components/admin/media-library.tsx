@@ -37,32 +37,45 @@ export function MediaLibrary({ initial }: { initial: MediaItem[] }) {
   }, [items, query]);
 
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(event.target.files ?? []);
+    if (files.length === 0) return;
 
     setBusy(true);
     setError(null);
-    const result = await uploadImage(file);
+
+    const uploaded: MediaItem[] = [];
+    let firstError: string | null = null;
+
+    for (const file of files) {
+      const result = await uploadImage(file);
+      if (result.ok) {
+        uploaded.push({
+          name: result.url.split("/").pop() ?? result.url,
+          url: result.url,
+          size: file.size,
+          mimeType: file.type,
+          createdAt: new Date().toISOString(),
+        });
+      } else if (!firstError) {
+        firstError = result.error;
+      }
+    }
+
     setBusy(false);
     if (fileRef.current) fileRef.current.value = "";
 
-    if (!result.ok) {
-      setError(result.error);
-      return;
+    if (firstError) {
+      setError(
+        uploaded.length > 0
+          ? `${firstError} (${uploaded.length} of ${files.length} uploaded.)`
+          : firstError,
+      );
     }
 
-    const name = result.url.split("/").pop() ?? result.url;
-    setItems((prev) => [
-      {
-        name,
-        url: result.url,
-        size: file.size,
-        mimeType: file.type,
-        createdAt: new Date().toISOString(),
-      },
-      ...prev,
-    ]);
-    router.refresh();
+    if (uploaded.length > 0) {
+      setItems((prev) => [...uploaded, ...prev]);
+      router.refresh();
+    }
   }
 
   async function copy(item: MediaItem) {
@@ -118,9 +131,16 @@ export function MediaLibrary({ initial }: { initial: MediaItem[] }) {
           className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent disabled:opacity-60"
         >
           <Upload className="h-4 w-4" aria-hidden />
-          {busy ? "Working…" : "Upload image"}
+          {busy ? "Working…" : "Upload images"}
         </button>
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={handleUpload}
+        />
       </div>
 
       {error ? (
@@ -132,7 +152,7 @@ export function MediaLibrary({ initial }: { initial: MediaItem[] }) {
       {filtered.length === 0 ? (
         <p className="rounded-2xl border border-border bg-surface p-8 text-sm text-muted">
           {items.length === 0
-            ? "Nothing uploaded yet. Upload an image, then copy its URL into any project screenshot."
+            ? "Nothing uploaded yet. Upload one or more images, then copy their URLs into any project screenshot."
             : "No files match that search."}
         </p>
       ) : (
